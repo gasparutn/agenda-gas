@@ -14,8 +14,18 @@
                 tabla.id = 'tablaContactos';
                 let tablaHeader = document.createElement('thead');
                 let tablaBody = document.createElement('tbody');
-                // CON BUCLE FOR
-                for(let i = 0 ; i < obj.length; i++)
+                let primeraFila = document.createElement('tr');
+                
+                for(let i = 0 ; i < obj[0].length; i++)
+                {
+                    let celda = document.createElement('td');
+                    celda.textContent = obj[0][i];
+                    primeraFila.appendChild(celda);
+                }
+                tablaHeader.appendChild(primeraFila);
+                tabla.appendChild(tablaHeader);
+                // CON BUCLE FOR doble  ANIDADO
+                for(let i = 1 ; i < obj.length; i++)
                 {
                     let fila = document.createElement('tr');
                     for(let j = 0 ; j < obj[i].length ; j++)
@@ -23,19 +33,11 @@
                         let celda = document.createElement('td');
                         celda.textContent = obj[i][j];
                          //añadimos celda a la fila
-                         fila.appendChild(celda);
+                        fila.appendChild(celda);
                     }
-                 if(i == 0) 
-                     {
-                        //si es la primela fila, se guarda como cabecera
-                         tablaHeader.appendChild(fila);
-                        tabla.appendChild(tablaHeader);
-                    }
-                    else 
-                     {
-                       tablaBody.appendChild(fila);
-                    }
+                    tablaBody.appendChild(fila);
                 }
+                
                 
                 //bucle doble foreach que recorre cada una de las filas y otro para cada celda
                 // Array.from(obj).forEach((filaActual, i) => 
