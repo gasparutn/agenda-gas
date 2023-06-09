@@ -1,16 +1,18 @@
 <script>
 
+function crearTablaContactos() 
+    {
+        //borrar la tabla
+        eliminarTabla();
 
-    function crearTablaContactos() {
+        //CREAMOS loadder -ICONO DE CARGA-
+        crearLoaderAnillo('divContactos');
+
         //traemos los datos de contactos y programamos y devolvemos datos
-        let tabla = document.getElementById('tablaContactos');
-        //si existe la borramos
-        if (tabla) tabla.remove();
-
         google.script.run
-        .withSuccessHandler(crearTablaContactosCorrectamente)
-        .withFailureHandler(crearTablaContactosError)
-        .obtenerContactos();
+            .withSuccessHandler(crearTablaContactosCorrectamente)
+            .withFailureHandler(crearTablaContactosError)
+            .obtenerContactos();
     }
 
     function crearTablaContactosCorrectamente(obj) 
@@ -22,11 +24,10 @@
 
         let tablaHeader = document.createElement('thead');
         let tablaBody = document.createElement('tbody');
-        
+
         //header de la tabla
         let primeraFila = document.createElement('tr');
-        for (let i = 0; i < obj[0].length; i++) 
-        {
+        for (let i = 0; i < obj[0].length; i++) {
             let celda = document.createElement('td');
             celda.textContent = obj[0][i];
             primeraFila.appendChild(celda);
@@ -35,9 +36,8 @@
         tablaHeader.appendChild(primeraFila);
         tabla.appendChild(tablaHeader);
 
-        // CON BUCLE FOR doble  ANIDADO
-        for (let i = 1; i < obj.length; i++) 
-        {
+        // CON BUCLE FOR doble ANIDADO
+        for (let i = 1; i < obj.length; i++) {
             let fila = document.createElement('tr');
             for (let j = 0; j < obj[i].length; j++) {
                 let celda = document.createElement('td');
@@ -47,153 +47,205 @@
             }
             tablaBody.appendChild(fila);
         }
-        //bucle doble foreach que recorre cada una de las filas y otro para cada celda
-        // Array.from(obj).forEach((filaActual, i) => 
+    
+        // agregamos clases a la cabecera
+        tablaHeader.classList.add('table-dark');
+
+        //cuerpo(body) de la tabla donde insertaremos la fila y celda
+        tabla.appendChild(tablaBody);
+
+        // agregamos el clases styles a la tabla
+        tabla.classList.add('table', 'table-striped', 'border', 'border-4', 'border-dark');
+
+        // agregamos tabla a la pagina
+        document.getElementById('divContactos').appendChild(tabla);
+
+        //MOSTRAR NOTIFICACION DE >>>>OK<<<<<<<
+        crearNotificacionOK('Contactos obtenidos correctamente', 'Todo en orden');
+
+        //ELIMINAMOS EL LOADES
+        eliminarLoader();
+    }
+    function crearTablaContactosError() 
+    {
+        //MOSTRAR NOTIFICACION DE ERROR >>>>ERROR<<<<<<<
+        crearNotificacionError('No se han podido leer los contactos', 'ERROR');
+        eliminarLoader();
+    }
+
+    function crearNotificacion(mensaje, titulo) 
+    {
+        document.getElementById('mensajeNotificacion').textContent = mensaje;
+        document.getElementById('tituloNotificacion').textContent = titulo;
+        let elementoNotificacion = document.getElementById('notificacion');
+        bootstrap.Toast.getOrCreateInstance(elementoNotificacion).show();
+    }
+
+    //CREAMOS FUNCIONES PARA CREAR LA NOTIFICACION
+    function crearNotificacionOK(mensaje, titulo) 
+    {
+        crearNotificacion(mensaje, titulo);
+        crearIcononNotificacionOK();
+        crearColorNotificacion('--color-verde-oscuro');
+    }
+
+    function crearNotificacionError(mensaje, titulo) 
+    {
+        crearNotificacion(mensaje, titulo);
+        crearIconoNotificacionError();
+        crearColorNotificacion('--color-rojo-oscuro');
+    }
+
+    function crearNotificacionAdvertencia(mensaje, titulo) 
+    {
+        crearNotificacion(mensaje, titulo);
+        crearIconoNotificacionAdevertencia();
+        crearColorNotificacion('--color-amarillo-oscuro');
+    }
+
+    //CREAMOS LAS FUNCIONES PARA LOS ICONOS NOTIFICACION 
+
+    function crearIcononNotificacionOK() 
+    {
+        document.getElementById('notificacion').className = '';
+        document.getElementById('notificacion').classList.add('bi', 'bi-check2-square');
+    }
+
+    function crearIconoNotificacionError() 
+    {
+        document.getElementById('notificacion').className = '';
+        document.getElementById('notificacion').classList.add('bi', 'bi-bug');
+    }
+
+    function crearIconoNotificacionAdevertencia() 
+    {
+        document.getElementById('notificacion').className = '';
+        document.getElementById('notificacion').classList.add('bi', 'bi-exclamation-square');
+    }
+
+    function crearColorNotificacion(color) 
+    {
+        let elementoNotificacion = document.getElementById('notificacion');
+        elementoNotificacion.style.backgroundColor = getComputedStyle(document.documentElement).getPropertyValue(color);
+
+    }
+
+    function crearLoader(elementoPadre) 
+    {
+        //si lo encontramos lo elimanamos
+        eliminarLoader();
+
+        let loader = document.createElement('div');
+        loader.id = 'loader';
+        //le insertamos 4 div hijos
+        loader.appendChild(document.createElement('div'));
+        loader.appendChild(document.createElement('div'));
+        loader.appendChild(document.createElement('div'));
+        loader.appendChild(document.createElement('div'));
+        return document.getElementById(elementoPadre).appendChild(loader);
+    }
+
+    function crearLoaderPuntos(elementoPadre)
+    {
+    let loader = crearLoader(elementoPadre);
+    loader.classList.add('lds-ellipsis');
+    }
+
+    function crearLoaderAnillo(elementoPadre)
+    {
+    let loader = crearLoader(elementoPadre);
+    loader.classList.add('lds-ring');
+    }
+
+    //funciones eliminar
+    function eliminarLoader() 
+    {
+        let loader = document.getElementById('loader');
+        if (loader) loader.remove();
+    }
+
+    function eliminarTabla() 
+    {
+        let tabla = document.getElementById('tablaContactos');
+        //si existe la borramos
+        if (tabla) tabla.remove();
+    }
+
+
+
+
+
+
+
+
+//bucle doble foreach que recorre cada una de las filas y otro para cada celda
+        // Array.from(obj).forEach((filaActual, i) =>
         // {
         //     //por cada una de estas fila creamos un elemento de tipo 'tr'->fila
         //     let fila = document.createElement('tr');
 
-        //     filaActual.forEach(celdaActual => 
+        //     filaActual.forEach(celdaActual =>
         //     {
-        //         //por cada una de las celdas creamos un elemento de tipo 'td'->fila   
+        //         //por cada una de las celdas creamos un elemento de tipo 'td'->fila
         //         let celda = document.createElement('td');
         //         //guadamos el contenido de la celda en un textContent
         //         celda.textContent = celdaActual;
         //         //añadimos celda a la fila
         //         fila.appendChild(celda);
         //     });
-        //     if(i == 0) 
+        //     if(i == 0)
         //     {
         //         //si es la primela fila, se guarda como cabecera
         //         tablaHeader.appendChild(fila);
         //         tabla.appendChild(tablaHeader);
         //     }
-        //     else 
+        //     else
         //     {
         //         tablaBody.appendChild(fila);
         //     }
         // });
-
-        // agregamos clases a la cabecera
-        tablaHeader.classList.add('table-dark');
-        //cuerpo(body) de la tabla donde insertaremos la fila y celda
-        tabla.appendChild(tablaBody);
-
-        // agregamos el clases styles a la tabla
-        tabla.classList.add('table', 'table-striped', 'border','border-4', 'border-dark');
-
-        // agregamos tabla a la pagina
-        document.getElementById('divContactos').appendChild(tabla);
-
-        //mostrar notificacion de OK<<<<<<<<<<<<<<<<<<<
-      crearNotificacionOK('Contactos obtenidos correctamente', 'Todo en orden');
-    }
-
-function crearTablaContactosError()
-{
-    //mostrar notificacion error
-    crearNotificacionError('No se han podido leer los contactos', 'ERROR');
-}
-
-function crearNotificacion(mensaje, titulo)
-{
-    document.getElementById('mensajeNotificacion').textContent = mensaje; 
-    document.getElementById('tituloNotificacion').textContent = titulo;
-    let elementoNotificacion = document.getElementById('notificacion'); 
-    bootstrap.Toast.getOrCreateInstance(elementoNotificacion).show(); 
-}
-
-//CREAMOS FUNCIONES PARA CREAR LA NOTIFICACION
-function crearNotificacionOK(mensaje, titulo)
-{
-    crearNotificacion(mensaje, titulo);
-    crearIcononNotificacionOK();
-    crearColorNotificacion('--color-verde-oscuro');
-}
-
-function crearNotificacionError(mensaje, titulo)
-{
-    crearNotificacion(mensaje, titulo);
-    crearIconoNotificacionError();
-    crearColorNotificacion('--color-rojo-oscuro');
-}
-
-function crearNotificacionAdvertencia(mensaje, titulo)
-{
-    crearNotificacion(mensaje, titulo);
-    crearIconoNotificacionAdevertencia();
-    crearColorNotificacion('--color-amarillo-oscuro');
-}
-
-//CREAMOS LAS FUNCIONES PARA LOS ICONOS NOTIFICACION 
-
-function crearIcononNotificacionOK()
-{
-    document.getElementById('notificacion').className = '';
-    document.getElementById('notificacion').classList.add('bi' , 'bi-check2-square');
-}
-
-function crearIconoNotificacionError()
-{
-    document.getElementById('notificacion').className = '';
-    document.getElementById('notificacion').classList.add('bi' , 'bi-bug');
-}
-
-function crearIconoNotificacionAdevertencia()
-{
-    document.getElementById('notificacion').className = '';
-    document.getElementById('notificacion').classList.add('bi' , 'bi-exclamation-square');
-}
-
-function crearColorNotificacion(color)
-{
-    let elementoNotificacion = document.getElementById('notificacion');
-    elementoNotificacion.style.backgroundColor = getComputedStyle(document.documentElement).getPropertyValue(color);
+    /*
+    REFACTORIZAMOS EL CODIGO CON LAS FUNCIONES DE ARRIBA
     
-}
-
-/*
-REFACTORIZAMOS EL CODIGO CON LAS FUNCIONES DE ARRIBA
-
-function crearNotificacion(tipo, mensaje, titulo)
-{
-//obtenemos los datos de esa notificacion
-let mensajeNotificacion = document.getElementById('mensajeNotificacion');
-let tituloNotificacion = document.getElementById('tituloNotificacion');
-let elementoNotificacion = document.getElementById('notificacion');
-let iconoNotificacion = document.getElementById('iconoNotificacion');
-let notificacion = bootstrap.Toast.getOrCreateInstance(elementoNotificacion);
-
-
-
-//editar la notificacion
-mensajeNotificacion.textContent = mensaje;
-tituloNotificacion.textContent = titulo;
-
-switch(tipo)
-{
-case NOTIFICACION_OK: 
-iconoNotificacion.className = '';
-iconoNotificacion.classList.add('bi' , 'bi-check2-square');
-elementoNotificacion.style.backgroundColor = getComputedStyle(document.documentElement).getPropertyValue('--color-verde-oscuro');
-break;
-
-case NOTIFICACION_DANGER: 
-iconoNotificacion.className = '';
-iconoNotificacion.classList.add('bi' , 'bi-bug');
-elementoNotificacion.style.backgroundColor = getComputedStyle(document.documentElement).getPropertyValue('--color-rojo-oscuro');
-break;
-
-case NOTIFICACION_WARNING: 
-iconoNotificacion.className = '';
-iconoNotificacion.classList.add('bi' , 'bi-exclamation-square');
-elementoNotificacion.style.backgroundColor = getComputedStyle(document.documentElement).getPropertyValue('--color-amarillo-oscuro');
-break;
-}
-
-//mostrar la notificacion
-notificacion.show();
-}
-*/
+    function crearNotificacion(tipo, mensaje, titulo)
+    {
+    //obtenemos los datos de esa notificacion
+    let mensajeNotificacion = document.getElementById('mensajeNotificacion');
+    let tituloNotificacion = document.getElementById('tituloNotificacion');
+    let elementoNotificacion = document.getElementById('notificacion');
+    let iconoNotificacion = document.getElementById('iconoNotificacion');
+    let notificacion = bootstrap.Toast.getOrCreateInstance(elementoNotificacion);
+    
+    
+    
+    //editar la notificacion
+    mensajeNotificacion.textContent = mensaje;
+    tituloNotificacion.textContent = titulo;
+    
+    switch(tipo)
+    {
+    case NOTIFICACION_OK: 
+    iconoNotificacion.className = '';
+    iconoNotificacion.classList.add('bi' , 'bi-check2-square');
+    elementoNotificacion.style.backgroundColor = getComputedStyle(document.documentElement).getPropertyValue('--color-verde-oscuro');
+    break;
+    
+    case NOTIFICACION_DANGER: 
+    iconoNotificacion.className = '';
+    iconoNotificacion.classList.add('bi' , 'bi-bug');
+    elementoNotificacion.style.backgroundColor = getComputedStyle(document.documentElement).getPropertyValue('--color-rojo-oscuro');
+    break;
+    
+    case NOTIFICACION_WARNING: 
+    iconoNotificacion.className = '';
+    iconoNotificacion.classList.add('bi' , 'bi-exclamation-square');
+    elementoNotificacion.style.backgroundColor = getComputedStyle(document.documentElement).getPropertyValue('--color-amarillo-oscuro');
+    break;
+    }
+    
+    //mostrar la notificacion
+    notificacion.show();
+    }
+    */
 
 </script>
