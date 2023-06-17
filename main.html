@@ -7,9 +7,7 @@
              -->
     <!-- Botones superiores-->
     <button type="button" class="btn btn-success m-2" onclick="crearTablaContactos()">Mostrar contactos</button>
-    <button type="button" class="btn btn-primary m-2" data-bs-toggle="modal" data-bs-target="#crearContactoModal">
-      Nuevo Contacto
-    </button>
+    <button type="button" class="btn btn-primary m-2" onclick="abrirModalCrearContacto()">Crear Contacto</button>
 
   </div>
 
@@ -40,7 +38,7 @@
     <div class="modal-lg modal-dialog">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title" id="titulocrearContactoModal">Nuevo Contacto</h5>
+          <h5 class="modal-title" id="tituloModal">Nuevo Contacto</h5>
         </div>
         <form onsubmit="insertarContacto()" method="dialog" id="formulario">
           <!-- Formulario de crear contacto-->
@@ -63,12 +61,12 @@
               <input type="email" class="form-control me-4" name="correo" id="correo" required>
 
               <span class="input-group-text"><i class="bi bi-telephone-fill"></i></span>
-              <input type="tel" class="form-control" name="telf" id="telf" pattern="[0-9]{9,11}" title="El telefono debe contener entre 9 y 11 dígitos numéricos" required>
+              <input type="tel" class="form-control" name="telf" id="telf" pattern="[0-7]{7,11}" title="El telefono debe contener entre 9 y 11 dígitos numéricos" required>
             </div>
          </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-bs-dismiss="">Cancelar</button>
-        <button type="submit" class="btn btn-success">Crear Contacto</button>
+        <button id="botonCrearModificar" type="submit" class="btn btn-success">Crear Contacto</button>
       </div>
       </form>
     </div>

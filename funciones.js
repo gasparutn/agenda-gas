@@ -41,3 +41,10 @@ function borrarContacto(numFila)
 {
   HOJA.deleteRow(numFila);
 }
+
+function modificarContacto(numFila, datos)
+{
+  let celdas = HOJA.getRange('A'+numFila+':D'+numFila);
+  //doble corchete porque recibe como parametro una matriz de una unica fila
+  celdas.setValues([[datos.nombre, datos.apellido, datos.correo, datos.telf]]);
+}
