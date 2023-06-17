@@ -36,3 +36,8 @@ function insertarContacto(nombre, apellido, correo, telf)
   // appendROW: añadimos un VECTOR con cada una de las celdas que queremos insertar en este caso se realiza con parentesis y corchete por cada dato
   HOJA.appendRow([nombre, apellido, correo, telf]);
 }
+
+function borrarContacto(numFila)
+{
+  HOJA.deleteRow(numFila);
+}

@@ -7,7 +7,7 @@
         let correo = document.getElementById('correo').value;
         let telf = document.getElementById('telf').value;
         //cerrar modal
-        bootstrap.Modal.getInstance(document.getElementById('crearContactoModal')).hide(); 
+        bootstrap.Modal.getInstance(document.getElementById('crearContactoModal')).hide(); //HIDE ->PARA QUE DESAPAREZCA EL MODAL
 
         //eliminamos tabla y luego la mostraremos si queremos
         eliminarTabla();
@@ -22,12 +22,11 @@
             .insertarContacto(nombre, apellido, correo, telf);
     }
 
-    function contactoInsertadoCorrectamente() 
-    {
+    function contactoInsertadoCorrectamente() {
         //eliminamos los datos de los Inputs
         document.getElementById('nombre').value = '';
         document.getElementById('correo').value = '';
-        
+
 
         //mostramos notificacion
         crearNotificacionOK('Contacto insertado correctamente', 'CONTACTO OK');
@@ -38,33 +37,29 @@
         crearTablaContactos();
     }
 
-    function contactoInsertadoError() 
-    {
+    function contactoInsertadoError() {
         crearNotificacionError('No se ha podido insertar el contacto', 'ERROR');
         //eliminamos loader
         eliminarLoader();
-         //mostramos tabla conctacto
+        //mostramos tabla conctacto
         crearTablaContactos();
     }
-    
 
-    function crearTablaContactos() 
-    {
+
+    function crearTablaContactos() {
         //borrar la tabla
         eliminarTabla();
-
         //CREAMOS loadder -ICONO DE CARGA-
         crearLoaderAnillo('divContactos');
-
         //traemos los datos de contactos y programamos y devolvemos datos
         google.script.run
             .withSuccessHandler(crearTablaContactosCorrectamente)
             .withFailureHandler(crearTablaContactosError)
             .obtenerContactos();
+
     }
 
-    function crearTablaContactosCorrectamente(obj) 
-    {
+    function crearTablaContactosCorrectamente(obj) {
         //sino, la creamos
         tabla = document.createElement('table');
         //le ponemos id para identificarla
@@ -75,54 +70,125 @@
 
         //header de la tabla
         let primeraFila = document.createElement('tr');
-        for (let i = 0; i < obj[0].length; i++) {
+        for (let i = 0; i < obj[0].length; i++) 
+        {
             let celda = document.createElement('td');
             celda.textContent = obj[0][i];
             primeraFila.appendChild(celda);
         }
 
+        //agregar columna OPCIONES
+        let celdaOpciones = document.createElement('td');
+        celdaOpciones.textContent = 'OPCIONES'; //nombre que aparecera en la fila que creamos 1ra
+        celdaOpciones.classList.add('text-center');
+        primeraFila.appendChild(celdaOpciones); //añadimos la celda de opciones
+
+        //agregar la fila al header de la tabla
         tablaHeader.appendChild(primeraFila);
         tabla.appendChild(tablaHeader);
 
-        // CON BUCLE FOR doble ANIDADO
-        for (let i = 1; i < obj.length; i++) {
+        // BODY de la tabla / CON BUCLE FOR doble ANIDADO - 
+        for (let i = 1; i < obj.length; i++) 
+        {
             let fila = document.createElement('tr');
-            for (let j = 0; j < obj[i].length; j++) {
+            for (let j = 0; j < obj[i].length; j++) 
+            {
                 let celda = document.createElement('td');
                 celda.textContent = obj[i][j];
                 //añadimos celda a la fila
                 fila.appendChild(celda);
             }
-            tablaBody.appendChild(fila);
+
+            //añadimos los botones a la fila
+            fila.appendChild(crearCeldaBotones(i + 1));  //si ponemos solo i borraremos la cabecera, es importante sumar +1 para que comience de la sgte celda
+            tablaBody.appendChild(fila);                //agregamos a cada uno de lo contactos esa ultima celda con los botones
         }
 
         // agregamos clases a la cabecera
         tablaHeader.classList.add('table-dark');
-
         //cuerpo(body) de la tabla donde insertaremos la fila y celda
         tabla.appendChild(tablaBody);
-
         // agregamos el clases styles a la tabla
         tabla.classList.add('table', 'table-striped', 'border', 'border-4', 'border-dark');
-
         // agregamos tabla a la pagina
         document.getElementById('divContactos').appendChild(tabla);
 
         //MOSTRAR NOTIFICACION DE >>>>OK<<<<<<<
         crearNotificacionOK('Contactos obtenidos correctamente', 'Todo en orden');
 
-        //ELIMINAMOS EL LOADES
+        //ELIMINAMOS EL LOADER
         eliminarLoader();
     }
-    function crearTablaContactosError() 
+
+    function crearCeldaBotones(numFila) //<<es el numero fila que tendremos que borrar y lo pasamos como parametro a la función borrar contacto
     {
+        //crear celda
+        let celda = document.createElement('td');
+        celda.classList.add('text-center');
+        
+        //crear botón borrar
+        let botonBorrar = document.createElement('button');
+        botonBorrar.onclick = () => borrarContacto(numFila);
+        botonBorrar.classList.add('btn', 'btn-danger', 'm-1');
+        
+        //icono borrar
+        let iconoBorrar = document.createElement('i');
+        iconoBorrar.classList.add('bi' , 'bi-trash');
+        botonBorrar.appendChild(iconoBorrar);
+
+        //crear bóton modificar
+        let botonModificar = document.createElement('button');
+        // botonModificar.onclick = () => modificarContacto(numFila);
+        botonModificar.classList.add('btn', 'btn-warning', 'm-1');
+        
+        //icono modificar
+        let iconoModificar = document.createElement('i');
+        iconoModificar.classList.add('bi' , 'bi-pencil-square');
+        botonModificar.appendChild(iconoModificar);
+        
+        //agregamos botones a la celda
+        celda.appendChild(botonBorrar);
+        celda.appendChild(botonModificar);
+
+        return celda;
+    }
+
+    function borrarContacto(numFila) {
+        eliminarTabla();
+        //CREAMOS loadder -ICONO DE CARGA-
+        crearLoaderAnillo('divContactos');
+        //traemos los datos de contactos y programamos y devolvemos datos
+        google.script.run
+            .withSuccessHandler(contactoBorradoCorrectamente)
+            .withFailureHandler(contactoBorradoError)
+            .borrarContacto(numFila);
+    }
+
+    function contactoBorradoCorrectamente() {
+        //mostramos notificacion
+        crearNotificacionOK('Contacto borrado correctamente', 'BORRADO OK');
+        //eliminamos loader
+        eliminarLoader();
+        //mostramos tabla conctacto
+        crearTablaContactos();
+    }
+
+    function contactoBorradoError() {
+        crearNotificacionError('No se ha podido BORRAR el contacto', 'ERROR');
+        //eliminamos loader
+        eliminarLoader();
+        //mostramos tabla conctacto
+        crearTablaContactos();
+    }
+
+
+    function crearTablaContactosError() {
         //MOSTRAR NOTIFICACION DE ERROR >>>>ERROR<<<<<<<
         crearNotificacionError('No se han podido leer los contactos', 'ERROR');
         eliminarLoader();
     }
 
-    function crearNotificacion(mensaje, titulo) 
-    {
+    function crearNotificacion(mensaje, titulo) {
         document.getElementById('mensajeNotificacion').textContent = mensaje;
         document.getElementById('tituloNotificacion').textContent = titulo;
         let elementoNotificacion = document.getElementById('notificacion');
@@ -130,22 +196,19 @@
     }
 
     //CREAMOS FUNCIONES PARA CREAR LA NOTIFICACION
-    function crearNotificacionOK(mensaje, titulo) 
-    {
+    function crearNotificacionOK(mensaje, titulo) {
         crearNotificacion(mensaje, titulo);
         crearIconoNotificacionOK();
         crearColorNotificacion('--color-verde-oscuro');
     }
 
-    function crearNotificacionError(mensaje, titulo) 
-    {
+    function crearNotificacionError(mensaje, titulo) {
         crearNotificacion(mensaje, titulo);
         crearIconoNotificacionError();
         crearColorNotificacion('--color-rojo-oscuro');
     }
 
-    function crearNotificacionAdvertencia(mensaje, titulo) 
-    {
+    function crearNotificacionAdvertencia(mensaje, titulo) {
         crearNotificacion(mensaje, titulo);
         crearIconoNotificacionAdvertencia();
         crearColorNotificacion('--color-amarillo-oscuro');
@@ -153,33 +216,28 @@
 
     //CREAMOS LAS FUNCIONES PARA LOS ICONOS NOTIFICACION 
 
-    function crearIconoNotificacionOK() 
-    {
+    function crearIconoNotificacionOK() {
         document.getElementById('notificacion').className = '';
         document.getElementById('notificacion').classList.add('bi', 'bi-check2-square');
     }
 
-    function crearIconoNotificacionError() 
-    {
+    function crearIconoNotificacionError() {
         document.getElementById('notificacion').className = '';
         document.getElementById('notificacion').classList.add('bi', 'bi-bug');
     }
 
-    function crearIconoNotificacionAdvertencia() 
-    {
+    function crearIconoNotificacionAdvertencia() {
         document.getElementById('notificacion').className = '';
         document.getElementById('notificacion').classList.add('bi', 'bi-exclamation-square');
     }
 
-    function crearColorNotificacion(color) 
-    {
+    function crearColorNotificacion(color) {
         let elementoNotificacion = document.getElementById('notificacion');
         elementoNotificacion.style.backgroundColor = getComputedStyle(document.documentElement).getPropertyValue(color);
 
     }
 
-    function crearLoader(elementoPadre) 
-    {
+    function crearLoader(elementoPadre) {
         //si lo encontramos lo elimanamos
         eliminarLoader();
 
@@ -193,14 +251,12 @@
         return document.getElementById(elementoPadre).appendChild(loader);
     }
 
-    function crearLoaderPuntos(elementoPadre) 
-    {
+    function crearLoaderPuntos(elementoPadre) {
         let loader = crearLoader(elementoPadre);
         loader.classList.add('lds-ellipsis');
     }
 
-    function crearLoaderAnillo(elementoPadre) 
-    {
+    function crearLoaderAnillo(elementoPadre) {
         let loader = crearLoader(elementoPadre);
         loader.classList.add('lds-ring');
     }
