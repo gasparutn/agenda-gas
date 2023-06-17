@@ -31,8 +31,8 @@ return datos;
   return HOJA.getDataRange().getValues();
 }
 
-function insertarContacto(nombre, correo) 
+function insertarContacto(nombre, apellido, correo, telf) 
 {
   // appendROW: añadimos un VECTOR con cada una de las celdas que queremos insertar en este caso se realiza con parentesis y corchete por cada dato
-  HOJA.appendRow([nombre, correo]);
+  HOJA.appendRow([nombre, apellido, correo, telf]);
 }
