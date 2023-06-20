@@ -110,10 +110,7 @@
         tabla.classList.add('table', 'table-striped', 'border', 'border-4', 'border-dark');
         // agregamos tabla a la pagina
         document.getElementById('divContactos').appendChild(tabla);
-
-        //MOSTRAR NOTIFICACION DE >>>>OK<<<<<<<
-        crearNotificacionOK('Contactos obtenidos correctamente', 'Todo en orden');
-
+    
         //ELIMINAMOS EL LOADER
         eliminarLoader();
     }
@@ -307,120 +304,35 @@
         //si existe la borramos
         if (tabla) tabla.remove();
     }
+    function importarContactos()
+   {
+        eliminarTabla();
+        crearLoaderAnillo('divContactos');
+      
+        google.script.run
+            .withSuccessHandler(contactosImportadosCorrectamente)
+            .withFailureHandler(contactosImportadosError)
+            .importarContactos();
+      }
 
-    //
-    //N O T I F I C A C I O N E S
-    //
-
-    const ICONO_CHECK = 'bi-check2-square';
-    const ICONO_PAPELERA = 'bi-trash';
-    const ICONO_CONTACTO = 'bi-person-plus-fill';
-    const ICONO_ERROR = 'bi-bug';
-    const ICONO_ADVERTENCIA = 'bi-exclamation-square';
-    
-    function crearNotificacionOK(mensaje,titulo)
-    {
-     crearNotificacion(titulo,mensaje, ICONO_CHECK,'--color-verde-oscuro');
+      function contactosImportadosCorrectamente() {
+        //mostramos notificacion
+        crearNotificacionBorrar('Se han agregado los contactos correctamente', 'CONTACTO OK');
+        //eliminamos loader
+        eliminarLoader();
+        //mostramos tabla conctacto
+        crearTablaContactos();
     }
 
-    function crearNotificacionError(titulo,mensaje)
-    {
-        crearNotificacion(titulo,mensaje, ICONO_ERROR, '--color-rojo-oscuro');
+    function contactosImportadosError() {
+        crearNotificacionError('No se ha podido importar los contactos', 'ERROR');
+        //eliminamos loader
+        eliminarLoader();
+        //mostramos tabla conctacto
+        crearTablaContactos();
     }
 
-    function crearNotificacionContacto(titulo,mensaje)
-    {
-        crearNotificacion(titulo,mensaje, ICONO_CONTACTO, '--color-azul-oscuro');
-    }
 
-    function crearNotificacionAdvertencia(titulo,mensaje)
-    {
-        crearNotificacion(titulo,mensaje, ICONO_ADVERTENCIA, '--color-amarillo-oscuro');
-    }
-
-    function crearNotificacionBorrar(titulo,mensaje)
-    {
-        crearNotificacion(titulo,mensaje, ICONO_PAPELERA, '--color-gris-oscuro');
-    }
-
-    function crearNotificacion(titulo, mensaje, icono, color) 
-    {
-        let notificacion = crearAtributosNotificacion();
-        let cabeceraNotificacion = crearCabeceraNotificacion(titulo, icono);
-        let cuerpoNotificacion = crearCuerpoNotificacion(mensaje);
-
-        //agregar cabecera y cuerpo
-        notificacion.appendChild(cabeceraNotificacion);
-        notificacion.appendChild(cuerpoNotificacion);
-
-        //establecer el color
-        notificacion.style.backgroundColor = getComputedStyle(document.documentElement).getPropertyValue(color);
-
-        //evento > lo adquirimos como aparece en bootstrap
-        //se va ocultar y destruir  el mensaje una vez que lo usemos
-        notificacion.addEventListener('hidden.bs.toast', function () 
-        {
-            this.remove();
-        });
-
-        //agregamos al contenedor las notificaciones
-        document.getElementById('contenedorNotificaciones').appendChild(notificacion);
-
-        //instanciamos mostramos la notificacion/ y lo mostramos al final con una >>.show
-        bootstrap.Toast.getOrCreateInstance(notificacion).show();
-    }
-
-    //creamos el CUERPO y vamos a necesitar el mensaje. Lo incluimos en la funcion
-    function crearCuerpoNotificacion(mensaje) {
-        let cuerpoNotificacion = document.createElement('div');
-        //añadimos la clase
-        cuerpoNotificacion.classList.add('toast-body');
-        //añadimos el contenido
-        cuerpoNotificacion.textContent = mensaje;
-        return cuerpoNotificacion;
-
-    }
-
-    function crearCabeceraNotificacion(titulo, icono, mensaje) {
-        //creamos cabecera
-        let cabeceraNotificacion = document.createElement('div');
-        cabeceraNotificacion.classList.add('toast-header', 'p-0');
-        
-        //creamos el icono, pasando el contenedor
-        crearIconoNotificacion(cabeceraNotificacion, icono);
-
-        //creamos el titulo  de tipo 'Strong'
-        let tituloNotificacion = document.createElement('strong');
-        //añadiremos la clase margin x2 tanto margin por la izq y la derecha
-        tituloNotificacion.classList.add('mx-2');
-        //estableceremos el contenido que lo recibimos como parametro
-        tituloNotificacion.textContent = titulo;
-        // lo añadimos a la cabecera
-        cabeceraNotificacion.appendChild(tituloNotificacion);
-        return cabeceraNotificacion;
-    }
-
-    function crearIconoNotificacion(contenedor, icono) {
-        let divIcono = document.createElement('div');
-        let iconoNotificacion = document.createElement('i');
-        divIcono.classList.add('icono-notificacion');
-        iconoNotificacion.classList.add('bi', icono);
-        //lo añadimos al contenedor
-        divIcono.appendChild(iconoNotificacion);
-        contenedor.appendChild(divIcono);
-
-    }
-
-    function crearAtributosNotificacion() {
-        //creamos las clases de los div de cada notificacion
-        let notificacion = document.createElement('div');
-        //añadimos las clases
-        notificacion.classList.add('toast', 'align-items-center', 'text-white', 'border-0');
-        notificacion.setAttribute('role', 'alert');
-        notificacion.setAttribute('aria-live', 'assertive');
-        notificacion.setAttribute('aria-atomic', 'true');
-        return notificacion;
-    }
 
 
 </script>

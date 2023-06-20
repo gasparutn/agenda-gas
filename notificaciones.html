@@ -1,0 +1,138 @@
+<script>
+//
+//N O T I F I C A C I O N E S
+//
+
+const ICONO_CHECK = 'bi-check2-square';
+const ICONO_PAPELERA = 'bi-trash';
+const ICONO_CONTACTO = 'bi-person-plus-fill';
+const ICONO_ERROR = 'bi-bug';
+const ICONO_ADVERTENCIA = 'bi-exclamation-square';
+//copiamos el .JSON de los iconos
+const LOTTIE_CHECK = 'https://assets7.lottiefiles.com/private_files/lf30_nrnx3s.json';
+const LOTTIE_PAPELERA = 'https://assets3.lottiefiles.com/packages/lf20_fezep958.json';
+const LOTTIE_CONTACTO = 'https://assets4.lottiefiles.com/packages/lf20_o9df1rnx.json';
+const LOTTIE_ERROR =  'https://assets10.lottiefiles.com/packages/lf20_bdnjxekx.json';
+const LOTTIE_ADVERTENCIA = 'https://assets3.lottiefiles.com/packages/lf20_Tkwjw8.json';
+
+function crearNotificacionOK(mensaje,titulo)
+{
+ crearNotificacion(titulo,mensaje, LOTTIE_CHECK, '--color-verde-oscuro');
+}
+
+function crearNotificacionError(titulo,mensaje)
+{
+    crearNotificacion(titulo,mensaje, LOTTIE_ERROR, '--color-rojo-oscuro');
+}
+
+function crearNotificacionContacto(titulo,mensaje)
+{
+    crearNotificacion(titulo,mensaje, LOTTIE_CONTACTO, '--color-azul-oscuro');
+}
+
+function crearNotificacionAdvertencia(titulo,mensaje)
+{
+    crearNotificacion(titulo,mensaje, LOTTIE_ADVERTENCIA, '--color-amarillo-oscuro');
+}
+
+function crearNotificacionBorrar(titulo,mensaje)
+{
+    crearNotificacion(titulo,mensaje, LOTTIE_PAPELERA, '--color-gris-oscuro');
+}
+
+function crearNotificacion(titulo, mensaje, lottie, color) 
+{
+    let notificacion = crearAtributosNotificacion();
+    let cabeceraNotificacion = crearCabeceraNotificacion(titulo, lottie);
+    let cuerpoNotificacion = crearCuerpoNotificacion(mensaje);
+
+    //agregar cabecera y cuerpo
+    notificacion.appendChild(cabeceraNotificacion);
+    notificacion.appendChild(cuerpoNotificacion);
+
+    //establecer el color
+    notificacion.style.backgroundColor = getComputedStyle(document.documentElement).getPropertyValue(color);
+
+    //evento > lo adquirimos como aparece en bootstrap
+    //se va ocultar y destruir  el mensaje una vez que lo usemos
+    notificacion.addEventListener('hidden.bs.toast', function () 
+    {
+        this.remove();
+    });
+
+    //agregamos al contenedor las notificaciones
+    document.getElementById('contenedorNotificaciones').appendChild(notificacion);
+
+    //instanciamos mostramos la notificacion/ y lo mostramos al final con una >>.show
+    bootstrap.Toast.getOrCreateInstance(notificacion).show();
+}
+
+//creamos el CUERPO y vamos a necesitar el mensaje. Lo incluimos en la funcion
+function crearCuerpoNotificacion(mensaje) {
+    let cuerpoNotificacion = document.createElement('div');
+    //añadimos la clase
+    cuerpoNotificacion.classList.add('toast-body');
+    //añadimos el contenido
+    cuerpoNotificacion.textContent = mensaje;
+    return cuerpoNotificacion;
+
+}
+
+function crearCabeceraNotificacion(titulo, lottie) {
+    //creamos cabecera
+    let cabeceraNotificacion = document.createElement('div');
+    cabeceraNotificacion.classList.add('toast-header', 'p-0');
+    
+    //creamos el LOTTIE, pasando el contenedor
+    crearLottieNotificacion(cabeceraNotificacion, lottie);
+
+    //creamos el titulo  de tipo 'Strong'
+    let tituloNotificacion = document.createElement('strong');
+    //añadiremos la clase margin x2 tanto margin por la izq y la derecha
+    tituloNotificacion.classList.add('mx-2');
+    //estableceremos el contenido que lo recibimos como parametro
+    tituloNotificacion.textContent = titulo;
+    // lo añadimos a la cabecera
+    cabeceraNotificacion.appendChild(tituloNotificacion);
+    return cabeceraNotificacion;
+}
+
+function crearIconoNotificacion(contenedor, icono) {
+    let divIcono = document.createElement('div');
+    let iconoNotificacion = document.createElement('i');
+    divIcono.classList.add('icono-notificacion');
+    iconoNotificacion.classList.add('bi', icono);
+    //lo añadimos al contenedor
+    divIcono.appendChild(iconoNotificacion);
+    contenedor.appendChild(divIcono);
+
+}
+
+function crearLottieNotificacion(contenedor, lottie)
+{
+let divIcono = document.createElement('div');
+let iconoNotificacion = document.createElement('lottie-player');
+//establecer los atributos
+iconoNotificacion.setAttribute('src', lottie);
+iconoNotificacion.setAttribute('background','transparent');
+iconoNotificacion.setAttribute('speed','1');
+iconoNotificacion.style.width = '3rem';
+iconoNotificacion.style.height = '3rem';
+iconoNotificacion.autoplay = true;
+
+divIcono.appendChild(iconoNotificacion);
+contenedor.appendChild(divIcono);
+}
+
+function crearAtributosNotificacion() {
+    //creamos las clases de los div de cada notificacion
+    let notificacion = document.createElement('div');
+    //añadimos las clases
+    notificacion.classList.add('toast', 'align-items-center', 'text-white', 'border-0');
+    notificacion.setAttribute('role', 'alert');
+    notificacion.setAttribute('aria-live', 'assertive');
+    notificacion.setAttribute('aria-atomic', 'true');
+    return notificacion;
+}
+
+</script>

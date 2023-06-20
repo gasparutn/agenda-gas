@@ -40,11 +40,29 @@ function insertarContacto(nombre, apellido, correo, telf)
 function borrarContacto(numFila)
 {
   HOJA.deleteRow(numFila);
-}
+} 
 
 function modificarContacto(numFila, datos)
 {
   let celdas = HOJA.getRange('A'+numFila+':D'+numFila);
   //doble corchete porque recibe como parametro una matriz de una unica fila
   celdas.setValues([[datos.nombre, datos.apellido, datos.correo, datos.telf]]);
+}
+
+// vamos a la URL https://randomuser.me/documentation y copiamos el la link 
+function importarContactos()
+{
+  let url = 'https://randomuser.me/api/?results=5&inc=name,email,phone'; 
+  //
+  let respuesta = UrlFetchApp.fetch(url).getContentText();
+  // para poder  ver los datos del  resultado de formar ordenada lo comvertimos a JSON 
+  let datos = JSON.parse(respuesta);
+
+  datos.results.forEach(insertarContactoJSON);
+  
+}
+
+function insertarContactoJSON(contacto)
+{
+  HOJA.appendRow([contacto.name.first, contacto.name.last, contacto.email , contacto.phone]);
 }
