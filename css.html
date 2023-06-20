@@ -60,6 +60,17 @@ background-color: #eee;
   z-index: 11;
 }
 
+.subir-arriba
+{
+  background-color: var(--color-gris-claro);
+  position: fixed; /* fijo */
+  transition: all .4s ease-in-out; /* cuando aparezca el boton y desaparezca*/
+  transform: scale(0); /* */
+  bottom: 1%; /*abajo a la derecha */
+  right: 1%;/*abajo a la derecha */
+  z-index: 10; /*que se muestre por encima de la notificacion */
+}
+
 /* LOADER ANILLO*/
 .lds-ring {
   display: inline-block;
