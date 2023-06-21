@@ -1,0 +1,124 @@
+<script>
+    function eliminarTabla() {
+        let tabla = document.getElementById('tablaContactos');
+        //si existe la borramos
+        if (tabla) tabla.remove();
+    }
+    function crearTablaContactos() {
+        //limpiamos tabla
+        limpiar();
+
+        google.script.run
+            .withSuccessHandler(crearTablaContactosCorrectamente)
+            .withFailureHandler(crearTablaContactosError)
+            .obtenerContactos();
+
+    }
+
+    function crearTablaContactosError() {
+        //MOSTRAR NOTIFICACION DE ERROR >>>>ERROR<<<<<<<
+        crearNotificacionError('No se han podido leer los contactos', 'ERROR');
+        eliminarLoader();
+    }
+
+    function crearTablaContactosCorrectamente(obj) {
+        //sino, la creamos
+        tabla = document.createElement('table');
+        //le ponemos id para identificarla
+        tabla.id = 'tablaContactos';
+
+        let tablaHeader = document.createElement('thead');
+        let tablaBody = document.createElement('tbody');
+
+        //header de la tabla
+        let primeraFila = document.createElement('tr');
+        for (let i = 0; i < obj[0].length; i++) {
+            let celda = document.createElement('td');
+            celda.textContent = obj[0][i];
+            primeraFila.appendChild(celda);
+        }
+
+        //agregar columna OPCIONES
+        let celdaOpciones = document.createElement('td');
+        celdaOpciones.textContent = 'OPCIONES'; //nombre que aparecera en la fila que creamos 1ra
+        celdaOpciones.classList.add('text-center');
+        primeraFila.appendChild(celdaOpciones); //añadimos la celda de opciones
+
+        //agregar la fila al header de la tabla
+        tablaHeader.appendChild(primeraFila);
+        tabla.appendChild(tablaHeader);
+
+        // BODY de la tabla / CON BUCLE FOR doble ANIDADO - 
+        for (let i = 1; i < obj.length; i++) { //Bucle externo <<Recorre con una de las filas de la tabla
+            let fila = document.createElement('tr');
+            for (let j = 0; j < obj[i].length; j++) { //<<Bucle interno recorre cada de las celdas de la tabla
+                let celda = document.createElement('td');
+                celda.textContent = obj[i][j];
+                //añadimos celda a la fila
+                fila.appendChild(celda);
+
+                if (j == 4) {  // j es igual a 4 columnas
+
+                    //creamos la imagen
+                    celda.textContent = ''; //<<vaviamos la imagen
+                    let imagen = document.createElement('img');
+                    imagen.classList.add('img-fluid', 'rounded') //para que sea RESPONSIVE img-fluid y ROUNDED borde redondeado
+                    imagen.src = obj[i][j]; //indicamos la fuente SRC que se corresponde con el nombre la URL de la imagen
+                    celda.appendChild(imagen);
+                }
+            }
+
+            //añadimos los botones a la fila
+            //si ponemos solo i borraremos la cabecera, es importante sumar +1 para que comience de la sgte celda
+            fila.appendChild(crearCeldaBotones(i + 1, obj[i]));
+            tablaBody.appendChild(fila); //agregamos a cada uno de lo contactos esa ultima celda con los botones
+        }
+
+        // agregamos clases a la cabecera
+        tablaHeader.classList.add('table-dark');
+        //cuerpo(body) de la tabla donde insertaremos la fila y celda
+        tabla.appendChild(tablaBody);
+        // agregamos el clases styles a la tabla
+        tabla.classList.add('table', 'table-striped', 'border', 'border-4', 'border-dark');
+        // agregamos tabla a la pagina
+        document.getElementById('divContactos').appendChild(tabla);
+
+        //ELIMINAMOS EL LOADER
+        eliminarLoader();
+    }
+
+
+    function crearCeldaBotones(numFila, datosContacto) //<<es el numero fila que tendremos que borrar y lo pasamos como parametro a la función borrar contacto
+    {
+        //crear celda
+        let celda = document.createElement('td');
+        celda.classList.add('text-center');
+
+        //crear botón borrar
+        let botonBorrar = document.createElement('button');
+        botonBorrar.onclick = () => borrarContacto(numFila);
+        botonBorrar.classList.add('btn', 'btn-danger', 'm-1');
+
+        //icono borrar
+        let iconoBorrar = document.createElement('i');
+        iconoBorrar.classList.add('bi', 'bi-trash');
+        botonBorrar.appendChild(iconoBorrar);
+
+        //crear boton modificar
+        let botonModificar = document.createElement('button');
+        botonModificar.onclick = () => abrirModalModificarContacto(numFila, datosContacto); // agregamos datos contacto como parametro
+        botonModificar.classList.add('btn', 'btn-warning', 'm-1');
+
+        //icono modificar
+        let iconoModificar = document.createElement('i');
+        iconoModificar.classList.add('bi', 'bi-pencil-square');
+        botonModificar.appendChild(iconoModificar);
+
+        //agregamos botones a la celda
+        celda.appendChild(botonBorrar);
+        celda.appendChild(botonModificar);
+
+        return celda;
+    }
+
+</script>
