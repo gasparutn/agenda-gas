@@ -1,6 +1,4 @@
 <script>
-
-
     //TARJETAS DE CONTACTOS
 
     function eliminarTarjetas()
@@ -16,7 +14,7 @@
         google.script.run
             .withSuccessHandler(crearTarjetasCorrectamente)
             .withFailureHandler(crearTarjetasError)
-            .obtenerContactos();
+            .obtenerDatos();
 
     }
 
@@ -25,52 +23,42 @@
         eliminarLoader();
     }
 
-    function crearTarjetasCorrectamente(obj) {
+    function crearTarjetasCorrectamente(datos) {
+        //extrear contactos / vector de tipo contacto
+        let contactos = extraerContactos(datos);
+
+        //por cada contacto agregamos una tarjeta
+        contactos.forEach(contacto => tarjetas.appendChild(crearContactoTarjeta(contacto)));
+                        
         //creamos un div donde añadimos todas la tarjetas de los contactos
         let tarjetas = document.createElement('div');
         // le ponemos id para identificarlos
         tarjetas.id = 'tarjetasContactos';
         //le añadimo la clase container de bootstraps, que actue por contenedor por defectos
         tarjetas.classList.add('container');
-        //recorremos matriz de obj y lo hacemos desde indice 1 por corresponde a la fila 2 
-        for (let i = 1; i < obj.length; i++) {
-            let tarjeta =
-            {  //accedemos a los campos a traves de los nombres
-                nombre: obj[i][0],
-                apellidos: obj[i][1],
-                correo: obj[i][2],
-                telf: obj[i][3],
-                imagen: obj[i][4],
-                indice: i + 1
-
-            };
-            //agregamos tarjeta a total de las tarjetas
-            tarjetas.appendChild(crearTarjeta(tarjeta));
-        }
+        
+        
         //agregar todas las tarjetas a div contactos
         document.getElementById('divContactos').appendChild(tarjetas);
 
         //eliminamos el loader
         eliminarLoader();
-
-
     }
 
-
-    function crearTarjeta(tarjeta) {
+    function crearContactoTarjeta(contacto) {
         //div tarjeta
         let divTarjeta = document.createElement('div');
         //vamos a incluirle a cada tarjeta un ID
-        divTarjeta.id = 'tarjeta' + tarjeta.indice;
+        divTarjeta.id = 'tarjeta' + contacto.indice;
         divTarjeta.classList.add('row', 'border', 'border-3', 'border-dark', 'rounded', 'bg-light', 'm-3', 'p-3');
 
         //creamos la datos y botones
-        let datosTarjeta = crearDatosTarjeta(tarjeta);
-        let divBotones = crearBotonesTarjeta(tarjeta);
+        let datosTarjeta = crearDatosTarjeta(contacto);
+        let divBotones = crearBotonesTarjeta(contacto);
         datosTarjeta.appendChild(divBotones);
 
         //creamos imagen
-        let imagenTarjeta = crearImagenTarjeta(tarjeta);
+        let imagenTarjeta = crearImagenTarjeta(contacto);
 
         //agregamos todo al divTarjeta
         divTarjeta.appendChild(datosTarjeta);
@@ -80,7 +68,7 @@
 
     }
 
-    function crearDatosTarjeta(tarjeta) {
+    function crearDatosTarjeta(contacto) {
         let datosTarjeta = document.createElement('div');
         datosTarjeta.classList.add('col-6', 'd-flex', 'flex-column', 'align-items-start');
 
@@ -117,71 +105,27 @@
     }
 
 
-    function crearBotonesTarjeta(tarjeta) {
+    function crearBotonesTarjeta(contacto) {
         let divBotones = document.createElement('div');
         divBotones.classList.add('d-flex', 'justify-content-start', 'mt-auto');
 
-        divBotones.appendChild(crearBotonInfoTarjeta(tarjeta));
-        divBotones.appendChild(crearBotonBorrarTarjeta(tarjeta));
-        divBotones.appendChild(crearBotonModificarTarjeta(tarjeta));
+        divBotones.appendChild(crearBotonContacto(contacto));
+        divBotones.appendChild(crearBotonBorrarContacto(contacto));
+        divBotones.appendChild(crearBotonModificarContacto(contacto));
 
         return divBotones;
     }
 
-    function crearBotonInfoTarjeta(tarjeta) {
-        //boton informacion
-        let botonInfo = document.createElement('button');
-        botonInfo.id = 'botonInfo' + tarjeta.indice;
-        botonInfo.classList.add('btn', 'btn-success', 'm-1');
-        botonInfo.onclick = () => mostrarInformacionAdicionalContacto(tarjeta);
+   
 
-        // le vamos agregar un icono
-        let iconoInfo = document.createElement('i');
-        iconoInfo.classList.add('bi', 'bi-plus-square');
-        botonInfo.appendChild(iconoInfo);
-
-        return botonInfo;
-    }
-
-    function crearBotonBorrarTarjeta(tarjeta) {
-        //boton informacion
-        let botonDanger = document.createElement('button');
-        botonDanger.id = 'botonDanger' + tarjeta.indice;
-        botonDanger.classList.add('btn', 'btn-danger', 'm-1');
-        botonDanger.onclick = () => borrarContacto(tarjeta.indice);
-
-        // le vamos agregar un icono
-        let iconoDanger = document.createElement('i');
-        iconoDanger.classList.add('bi', 'bi-trash');
-        botonDanger.appendChild(iconoDanger);
-
-        return botonDanger;
-    }
-
-    function crearBotonModificarTarjeta(tarjeta) {
-        //boton informacion
-        let botonModificar = document.createElement('button');
-        botonModificar.id = 'botonModificar' + tarjeta.indice;
-        botonModificar.classList.add('btn', 'btn-warning', 'm-1');
-        botonModificar.onclick = () => abrirModalModificarContacto(tarjeta.indice, tarjeta);
-
-        // le vamos agregar un icono
-        let iconoModificar = document.createElement('i');
-        iconoModificar.classList.add('bi', 'bi-pencil-square');
-        botonModificar.appendChild(iconoModificar);
-
-        return botonModificar;
-
-    }
-
-    function crearImagenTarjeta(tarjeta) {
+    function crearImagenTarjeta(contacto) {
         let imagenTarjeta = document.createElement('div');
         imagenTarjeta.classList.add('col-6', 'rounded', 'd-flex', 'justify-content-end');
         let cajaImagenTarjeta = document.createElement('div');
         cajaImagenTarjeta.classList.add('box', 'border', 'border-3', 'border-dark', 'rounded');
         let imagen = document.createElement('img');
         imagen.classList.add('img-fluid', 'rounded', 'img-contacto');
-        imagen.src = tarjeta.imagen;
+        imagen.src = contacto.imagen;
 
 
         //agregamos la tarjeta a la caja y tarjeta
