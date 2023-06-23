@@ -18,23 +18,72 @@
     function insertarContacto() {
        
         limpiar();
-
-        //obtenemos datos a traves de los ID
-        let nombre = document.getElementById('nombre').value;
-        let apellido = document.getElementById('apellido').value;
-        let correo = document.getElementById('correo').value;
-        let telf = document.getElementById('telf').value;
         //cerrar modal
         bootstrap.Modal.getInstance(document.getElementById('crearContactoModal')).hide(); //HIDE ->PARA QUE DESAPAREZCA EL MODAL
+        //guardamos el contacto
+       
+        let contacto = guardarDatosContacto();
+        //guardamos el archivo>> que lo tenemos en el input y elijimos el primer archivo[0]
+        //si no introduzco imagen se guarda la imagen de la constante
+        let archivo = document.getElementById('imagen').files[0];
 
-                //traemos los datos de contactos y programamos y devolvemos datos
-        google.script.run
+        //validamos que sea cargue un archivo o no 
+        if(archivo) subirImagenInsertar(contacto, archivo);
+        else
+        {
+            google.script.run
             .withSuccessHandler(contactoInsertadoCorrectamente)
             .withFailureHandler(contactoInsertadoError)
-            .insertarContacto(nombre, apellido, correo, telf);
+            .insertarContacto(contacto);
+        }
     }
 
-    function contactoInsertadoCorrectamente() {
+    function guardarDatosContacto()
+    {
+        let contacto = 
+       {
+        //obtenemos datos a traves de los ID
+        nombre      : document.getElementById('nombre').value,
+        apellidos   : document.getElementById('apellidos').value,
+        correo      : document.getElementById('correo').value,
+        telf        : document.getElementById('telf').value,
+        imagen      : document.getElementById('imgForm').src
+       };
+       return contacto;
+    }
+
+    function subirImagenInsertar(contacto, archivo)
+        {
+            //fileReader se utiliza para almacenar distintos tipos de archivos.
+         let fr = new FileReader();
+         //cuando se haya cargado ese archivo guardarlo como un ArrayBuffer
+         fr.readAsArrayBuffer(archivo); 
+        //cuando se complete la carga y se ejecute el ONLOAD, vamos a ejecutar una funcion que me pase ese ArrayBuffer ala funcion de Script
+        //de goole y se guarde
+         fr.onload = function()
+         {
+
+            let imagen = 
+            {  //accedemos al archivo
+                nombre: archivo.name,
+                tipo: archivo.type,
+                //guardamos esos datos en binario con la funcion Int8Array y por this hacemos referencia al objeto
+                // para que no sea solo una vista, hacemo una INSTANCIA - Array.from
+                datos: Array.from(new Int8Array(this.result))
+            };
+            // y se llama la funcion
+             google.script.run
+            .withSuccessHandler(contactoInsertadoCorrectamente)
+            .withFailureHandler(contactoInsertadoError)
+            .insertarContacto(contacto, imagen);
+         }
+                
+        }
+
+
+
+    function contactoInsertadoCorrectamente()
+    {
         //eliminamos los datos de los Inputs
         document.getElementById('nombre').value = '';
         document.getElementById('correo').value = '';
@@ -57,21 +106,54 @@
     }
     //MODIFICAR CONTACTOS
     function modificarContacto(numFila) {
-        //limpiamos tabla
+        
         limpiar();
-        //cerramos modal
         bootstrap.Modal.getOrCreateInstance(document.getElementById('crearContactoModal')).hide(); //<<< hide para cerrar el modal
 
         //obtener nuevos datos a partir del formulario
-        let nombre = document.getElementById('nombre').value;
-        let apellido = document.getElementById('apellido').value;
-        let correo = document.getElementById('correo').value;
-        let telf = document.getElementById('telf').value;
-
-        google.script.run
+        let contacto = guardarDatosContacto();
+        contacto.fila = numFila; // <<<< obtenemos la fila de este modo
+     
+        let archivo = document.getElementById('imagen').files[0];
+        
+        if(archivo) subirImagenModificar(contacto, archivo);
+        else
+        {
+            google.script.run
             .withSuccessHandler(contactoModificadoCorrectamente)
             .withFailureHandler(contactoModificadoError)
-            .modificarContacto(numFila, { nombre, apellido, correo, telf });
+            .modificarContacto(contacto);
+        }
+
+        function subirImagenModificar(contacto, archivo)
+        {
+            //fileReader se utiliza para almacenar distintos tipos de archivos.
+         let fr = new FileReader();
+         //cuando se haya cargado ese archivo guardarlo como un ArrayBuffer
+         fr.readAsArrayBuffer(archivo); 
+        //cuando se complete la carga y se ejecute el ONLOAD, vamos a ejecutar una funcion que me pase ese ArrayBuffer ala funcion de Script
+        //de goole y se guarde
+         fr.onload = function()
+         {
+
+            let imagen = 
+            {  //accedemos al archivo
+                nombre: archivo.name,
+                tipo: archivo.type,
+                //guardamos esos datos en binario con la funcion Int8Array y por this hacemos referencia al objeto
+                // para que no sea solo una vista, hacemo una INSTANCIA - Array.from
+                datos: Array.from(new Int8Array(this.result))
+            };
+            // y se llama la funcion
+             google.script.run
+            .withSuccessHandler(contactoModificadoCorrectamente)
+            .withFailureHandler(contactoModificadoError)
+            .modificarContacto(contacto, imagen);
+         }
+                
+        }
+
+        
     }
 
     function contactoModificadoCorrectamente() {
@@ -138,12 +220,5 @@
     }
 
   
-
-
-
-
-
-
-
 
 </script>

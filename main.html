@@ -1,71 +1,92 @@
 <main>
-<!-- Botones superiores-->
+  <!-- Botones superiores-->
   <div class="d-flex justify-content-center my-3">
-    <!-- vamos a trabajar de otro forma el formulario
-        <form action="https://script.google.com/macros/s/AKfycbwYQ1wqVQ3XXBktqRKnPrvjmmq3g_-1dm6hQ0ENqqkE/dev" method="get" id="formulario">-->
-    
-    
-    <button type="button" class="btn btn-success m-2" onclick="crearTarjetasContactos()">Mostrar contactos</button>
-    <button type="button" class="btn btn-success m-2" onclick="crearTablaContactos()">Mostrar contactos Tabla</button>
-    <button type="button" class="btn btn-primary m-2" onclick="abrirModalCrearContacto()">Crear Contacto</button>
+    <button type="button" class="btn btn-success m-2" onclick="crearTarjetasContactos()">
+    <i class="bi bi-postcard"></i>
+  </button>
+    <button type="button" class="btn btn-success m-2" onclick="crearTablaContactos()">
+    <i class="bi bi-table"></i>
+  </button>
+    <button type="button" class="btn btn-primary m-2" onclick="abrirModalCrearContacto()">
+    <i class="bi bi-person-plus"></i>
+  </button>
     <button type="button" class="btn btn-warning m-2" onclick="importarContactos()">+ 5</button>
-
   </div>
 
-  <!--Tabla de Contactos-->
+  <!--Contactos-->
   <div class="container col-12 d-flex justify-content-center" id="divContactos"></div>
 
   <!--Notificaciones-->
   <div class="div-notificaciones position-fixed bottom-0 end-0 p-3">
     <div class="toast-container" id="contenedorNotificaciones">
       <!--Aqui van las notificaciones-->
+    </div>
   </div>
-</div>
 
-    <!-- Modal -->
-    <div class="modal fade" id="crearContactoModal" tabindex="-1" aria-labelledby="tituloCrearContactoModal"
-      aria-hidden="true">
-      <div class="modal-lg modal-dialog">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title" id="tituloModal">Nuevo Contacto</h5>
-          </div>
-          <form onsubmit="insertarContacto()" method="dialog" id="formulario">
-            <!-- Formulario de crear contacto-->
-            <div class="modal-body">
-              <!-- Nombre y Apellido-->
-              <div class="row mb-3">
-                <div class="col-4">
+  <!-- Modal -->
+  <div class="modal fade" id="crearContactoModal" tabindex="-1" aria-labelledby="tituloCrearContactoModal"
+    aria-hidden="true">
+    <div class="modal-lg modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="tituloModal">Nuevo Contacto</h5>
+        </div>
+        <form onsubmit="insertarContacto()" method="dialog" id="formulario">
+          <!-- Formulario de crear contacto-->
+          <div class="modal-body">
+            
+            <div class="row mb-3">
+              <!-- Parte izquierda DEL MODAL TARJETA-->
+              <div class="col-6 d-flex flex-column">
+                <!-- Nombre -->
+                <div class="mb-2">
                   <label for="nombre" class="form-label">Nombre</label>
                   <!--pattern="[\D]*" validamos que sea letras nada mas -->
                   <input type="text" class="form-control" name="nombre" id="nombre" pattern="[\D]*"
                     title="El nombre no puede contener números"
                     required><!--required para que si o si pida completar los campos-->
                 </div>
-
-                <div class="col-8">
-                  <label for="nombre" class="form-label">Apellido</label>
-                  <input type="text" class="form-control" name="apellido" id="apellido" pattern="[^0-9]*"
+                <!-- Apellidos-->
+                <div class="mb-2">
+                  <label for="nombre" class="form-label">Apellidos</label>
+                  <input type="text" class="form-control" name="apellidos" id="apellidos" pattern="[^0-9]*"
                     title="El nombre no puede contener números" required>
+
+                </div>
+                <!-- Correo -->
+                <div class="input-group mb-2">
+                  <span class="input-group-text"><i class="bi bi-envelope-fill"></i></span>
+                  <input type="email" class="form-control name= correo" id="correo" required>
+                </div>
+
+                <!-- Teléfono -->
+                <div class="input-group mb-2">
+                  <span class="input-group-text"><i class="bi bi-telephone-fill"></i></span>
+                  <input type="tel" class="form-control" name="telf" id="telf" pattern="[\d]{7,11}"
+                    title="El telefono debe contener entre 6 y 11 dígitos numéricos" required>
+                </div>
+
+                <!-- Archivo -->
+                <div class="mb-2">
+                  <label for="imagen" class="form-label">Selecciona una imagen para el contacto</label>
+                  <input type="file" accept="imagen/*" class="form-control" name="imagen" id="imagen">
                 </div>
               </div>
-              <!-- Correo y telefono-->
-              <div class="input-group mb-3">
-                <span class="input-group-text"><i class="bi bi-envelope-fill"></i></span>
-                <input type="email" class="form-control me-4" name="correo" id="correo" required>
 
-                <span class="input-group-text"><i class="bi bi-telephone-fill"></i></span>
-                <input type="tel" class="form-control" name="telf" id="telf" pattern="[\d]{7,11}"
-                  title="El telefono debe contener entre 6 y 11 dígitos numéricos" required>
+              <!-- Parte Derecha DEL MODAL TARJETA-->
+              <div class="col-6 d-flex justify-content-center align-items-center p-0">
+                <img class="img-fluid img-form" id="imgForm" alt="Imagen de Contacto">
               </div>
             </div>
-            <div class="modal-footer">
-              <button type="button" class="btn btn-secondary" data-bs-dismiss="">Cancelar</button>
-              <button id="botonCrearModificar" type="submit" class="btn btn-success">Crear Contacto</button>
-            </div>
-          </form>
-        </div>
+          </div>
+
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+            <button id="botonCrearModificar" type="submit" class="btn btn-success">Crear Contacto</button>
+          </div>
+        </form>
       </div>
     </div>
+  </div>
 
 </main>

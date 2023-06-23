@@ -1,4 +1,6 @@
 const HOJA = SpreadsheetApp.openById("1G1rLBgiinp9kwevEtP6w86JtwWyLlXjrwsqMe6cQUUc").getActiveSheet();
+const CARPETA = DriveApp.getFolderById('1bLv6PxR1_D-K-wbRPbkQW-ikuM0aQXyc');
+const CABECERA_URL_IMAGEN_DRIVE = 'https://drive.google.com/uc?/export=view&id=';
 
 function doGet(datos) 
 {
@@ -23,23 +25,34 @@ function obtenerDatos()
   return HOJA.getDataRange().getValues();
 }
 
-function insertarContacto(nombre, apellido, correo, telf) 
+function insertarContacto(contacto, imagen) 
 {
+  if(imagen) contacto.imagen = guardarImagen(imagen);
   // appendROW: añadimos un VECTOR con cada una de las celdas que queremos insertar en este caso se realiza con parentesis y corchete por cada dato
-  HOJA.appendRow([nombre, apellido, correo, telf]);
+  HOJA.appendRow([contacto.nombre, contacto.apellidos, contacto.correo, contacto.telf, contacto.imagen]);
 }
+
+function modificarContacto(contacto, imagen)
+{
+  if(imagen) contacto.imagen = guardarImagen(imagen);
+  
+  let celdas = HOJA.getRange('A'+contacto.fila+':E'+contacto.fila);
+  //doble corchete porque recibe como parametro una matriz de una unica fila
+  celdas.setValues([[contacto.nombre, contacto.apellidos, contacto.correo, contacto.telf, contacto.imagen]]);
+}
+
+function guardarImagen(imagen)
+{
+  let blob = Utilities.newBlob(imagen.datos, imagen.tipo, imagen.nombre);
+  let archivo = CARPETA.createFile(blob);
+  return CABECERA_URL_IMAGEN_DRIVE+archivo.getId();
+}
+
 
 function borrarContacto(numFila)
 {
   HOJA.deleteRow(numFila);
 } 
-
-function modificarContacto(numFila, datos)
-{
-  let celdas = HOJA.getRange('A'+numFila+':D'+numFila);
-  //doble corchete porque recibe como parametro una matriz de una unica fila
-  celdas.setValues([[datos.nombre, datos.apellido, datos.correo, datos.telf]]);
-}
 
 // vamos a la URL https://randomuser.me/documentation y copiamos el la link 
 function importarContactos()

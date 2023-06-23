@@ -1,11 +1,11 @@
 <script>
+
     //TARJETAS DE CONTACTOS
 
     function eliminarTarjetas()
     {
         let tarjetas = document.getElementById('tarjetasContactos');
         if(tarjetas) tarjetas.remove();
-        
     }
 
     function crearTarjetasContactos() {
@@ -15,7 +15,6 @@
             .withSuccessHandler(crearTarjetasCorrectamente)
             .withFailureHandler(crearTarjetasError)
             .obtenerDatos();
-
     }
 
     function crearTarjetasError() {
@@ -26,10 +25,6 @@
     function crearTarjetasCorrectamente(datos) {
         //extrear contactos / vector de tipo contacto
         let contactos = extraerContactos(datos);
-
-        //por cada contacto agregamos una tarjeta
-        contactos.forEach(contacto => tarjetas.appendChild(crearContactoTarjeta(contacto)));
-                        
         //creamos un div donde añadimos todas la tarjetas de los contactos
         let tarjetas = document.createElement('div');
         // le ponemos id para identificarlos
@@ -37,13 +32,16 @@
         //le añadimo la clase container de bootstraps, que actue por contenedor por defectos
         tarjetas.classList.add('container');
         
-        
+        //por cada contacto agregamos una tarjeta
+        contactos.forEach(contacto => tarjetas.appendChild(crearContactoTarjeta(contacto)));
+           
         //agregar todas las tarjetas a div contactos
         document.getElementById('divContactos').appendChild(tarjetas);
 
         //eliminamos el loader
         eliminarLoader();
     }
+
 
     function crearContactoTarjeta(contacto) {
         //div tarjeta
@@ -74,7 +72,7 @@
 
         //nombre
         let nombre = document.createElement('h3');
-        nombre.textContent = tarjeta.nombre + ' ' + tarjeta.apellidos;
+        nombre.textContent = contacto.nombre + ' ' + contacto.apellidos;
 
         //correo
         let correo = document.createElement('div');
@@ -82,7 +80,7 @@
         let iconoCorreo = document.createElement('i');
         iconoCorreo.classList.add('bi', 'bi-envelope-fill', 'me-2');
         let tituloCorreo = document.createElement('h5');
-        tituloCorreo.textContent = tarjeta.correo;
+        tituloCorreo.textContent = contacto.correo;
         correo.appendChild(iconoCorreo);
         correo.appendChild(tituloCorreo);
 
@@ -92,7 +90,7 @@
         let iconoTelf = document.createElement('i');
         iconoTelf.classList.add('bi', 'bi-telephone-fill', 'me-2');
         let tituloTelf = document.createElement('h5');
-        tituloTelf.textContent = tarjeta.telf;
+        tituloTelf.textContent = contacto.telf;
         telf.appendChild(iconoTelf);
         telf.appendChild(tituloTelf);
 
@@ -104,20 +102,17 @@
         return datosTarjeta;
     }
 
-
     function crearBotonesTarjeta(contacto) {
         let divBotones = document.createElement('div');
         divBotones.classList.add('d-flex', 'justify-content-start', 'mt-auto');
 
-        divBotones.appendChild(crearBotonContacto(contacto));
+        divBotones.appendChild(crearBotonInfoContacto(contacto));
         divBotones.appendChild(crearBotonBorrarContacto(contacto));
         divBotones.appendChild(crearBotonModificarContacto(contacto));
 
         return divBotones;
     }
-
    
-
     function crearImagenTarjeta(contacto) {
         let imagenTarjeta = document.createElement('div');
         imagenTarjeta.classList.add('col-6', 'rounded', 'd-flex', 'justify-content-end');
@@ -126,7 +121,6 @@
         let imagen = document.createElement('img');
         imagen.classList.add('img-fluid', 'rounded', 'img-contacto');
         imagen.src = contacto.imagen;
-
 
         //agregamos la tarjeta a la caja y tarjeta
         cajaImagenTarjeta.appendChild(imagen);

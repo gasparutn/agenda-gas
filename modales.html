@@ -1,5 +1,9 @@
 <script>
-function abrirModalCrearContacto() {
+
+    const IMAGEN_PERFIL_INICIO = 'https://drive.google.com/uc?/export=view&id=1b-TrkQBAc83zHmUjCIQNg6EK9Yc4Ebw1';
+
+
+    function abrirModalCrearContacto() {
         //boton crear contacto
         let boton = document.getElementById('botonCrearModificar');
         boton.textContent = "Crear Contacto";
@@ -13,9 +17,12 @@ function abrirModalCrearContacto() {
 
         //obetenemos datos del formulario y los vaciamos
         document.getElementById('nombre').value = '';
-        document.getElementById('apellido').value = '';
+        document.getElementById('apellidos').value = '';
         document.getElementById('correo').value = '';
         document.getElementById('telf').value = '';
+        document.getElementById('imagen').value = '';
+        document.getElementById('imgForm').src = IMAGEN_PERFIL_INICIO;
+
 
         //abrimos modal
         bootstrap.Modal.getOrCreateInstance(document.getElementById('crearContactoModal')).show();
@@ -37,14 +44,16 @@ function abrirModalCrearContacto() {
 
         //obetenemos datos del formulario
         document.getElementById('nombre').value = contacto.nombre;
-        document.getElementById('apellido').value = contacto.apellidos;
+        document.getElementById('apellidos').value = contacto.apellidos;
         document.getElementById('correo').value = contacto.correo;
         document.getElementById('telf').value = contacto.telf;
+        document.getElementById('imgForm').src = contacto.imagen;
+        document.getElementById('imagen').value = '';
 
         //abrimos modal
         bootstrap.Modal.getOrCreateInstance(document.getElementById('crearContactoModal')).show();
 
     }
 
-    
+
 </script>
