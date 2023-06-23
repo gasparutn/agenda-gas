@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <!--Debemos incluirlo si vamos hacer un POST:la line 5 o si no la pag Html nos va arrojar 403, las html GAS lo deben inlcuir ya que desde visual code no lo hace -->
+    <base target="_top">
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -9,7 +11,7 @@
     <?!= obtenerDatosHTML('css'); ?>
 
 </head>
-<body class="d-flex flex-column min-vh-100">
+<body>
 
     <!-- HEADER -->
     <?!= obtenerDatosHTML('header'); ?>
@@ -22,6 +24,14 @@
 
     <!-- JS -->
     <?!= obtenerDatosHTML('js'); ?>
+    <?!= obtenerDatosHTML('eventos'); ?>
+    <?!= obtenerDatosHTML('botonesContacto'); ?>
+    <?!= obtenerDatosHTML('modales'); ?>
+    <?!= obtenerDatosHTML('notificaciones'); ?>
+    <?!= obtenerDatosHTML('tarjetas'); ?>
+    <?!= obtenerDatosHTML('tablas'); ?>
+    <?!= obtenerDatosHTML('loaders'); ?>
+    
 
 </body>
 

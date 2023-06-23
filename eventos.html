@@ -1,0 +1,29 @@
+<script>
+//boton subir
+    window.addEventListener('scroll', function()
+    {
+        if(this.window.scrollY > 500)
+        {
+       document.getElementById('botonSubir').style.transform = 'scale(1)';
+        }
+        if(this.window.scrollY <500)
+        {
+            document.getElementById('botonSubir').style.transform = "scale(0)";
+        }
+    });
+
+    //CARGAR IMAGEN en vista previa del MODAL
+    document.getElementById('imagen').addEventListener("change", function()
+    {     //accedemos al primer[0] fichero del this <<input / no usar operador flecha
+     document.getElementById('imgForm').src = URL.createObjectURL(this.files[0])
+    });
+
+    function subirArriba()
+    {
+        document.body.scrollTop = 0;
+        document.documentElement.scrollTop = 0;
+    }
+
+    
+
+</script>
