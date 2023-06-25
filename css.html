@@ -1,13 +1,13 @@
 <script src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"></script>
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet"
+  integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
+  integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
 
 
 <style>
-
-:root
-{
+  :root {
     --color-azul-claro: #7FB3D5;
     --color-azul-oscuro: #2874A6;
     --color-verde-claro: #D4EFDF;
@@ -18,178 +18,219 @@
     --color-amarillo-oscuro: #D4AC0D;
     --color-gris-claro: #E5E7E9;
     --color-gris-oscuro: #515A5A;
-}
-body{
+  }
 
-  display: flex;
-  flex-direction: column;
-  min-height: 100vh;
-}
+  body {
 
-header {
-background-color: #eee;
-}
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+  }
 
-.icono-footer
-{
-  font-size: 1.5rem;
+  header {
+    background-color: #eee;
+  }
+
+  .icono-footer {
+    font-size: 1.5rem;
     padding: 1rem;
     transition: all .2s ease-in-out;
     transform: scale(1);
-}
+  }
 
-.icono-footer:hover
-{
+  .icono-footer:hover {
     color: var(--color-azul-claro);
     transform: scale(1.2);
-}
+  }
 
-.icono-notificacion
-{
+  .icono-notificacion {
     font-size: 1.5rem;
     padding: .5rem;
-}
-
-.div-notificaciones
-{
-  z-index: 11;
-}
-
-.div-notificaciones
-{
-  z-index: 11;
-}
-
-.subir-arriba
-{
-  background-color: var(--color-gris-claro);
-  position: fixed; /* fijo */
-  transition: all .4s ease-in-out; /* cuando aparezca el boton y desaparezca*/
-  transform: scale(0); /* */
-  bottom: 1%; /*abajo a la derecha */
-  right: 1%;/*abajo a la derecha */
-  z-index: 10; /*que se muestre por encima de la notificacion */
-}
-
-.img-contacto
-{
- object-fit: cover;
- height: 12rem;
- width: 12rem;
-}
-
-.img-form
-{
-
-height: 18rem;
-width: 18rem;
-border: 1px solid black;
-border-radius: .5rem;
-object-fit: cover; /* contain ajusta el tamaño de la imagen en el recuadro de contacto */
-
-}
-
-.img-tabla
-{
-height: 4rem;
-object-fit: cover;
-}
-
-/* LOADER ANILLO*/
-.lds-ring {
-  display: inline-block;
-  position: relative;
-  width: 80px;
-  height: 80px;
-}
-
-.lds-ring div {
-  box-sizing: border-box;
-  display: block;
-  position: absolute;
-  width: 64px;
-  height: 64px;
-  margin: 8px;
-  border: 8px solid var(--color-azul-oscuro);
-  border-radius: 50%;
-  animation: lds-ring 1.2s cubic-bezier(0.5, 0, 0.5, 1) infinite;
-  border-color: var(--color-azul-oscuro) transparent transparent transparent;
-}
-.lds-ring div:nth-child(1) {
-  animation-delay: -0.45s;
-}
-.lds-ring div:nth-child(2) {
-  animation-delay: -0.3s;
-}
-.lds-ring div:nth-child(3) {
-  animation-delay: -0.15s;
-}
-@keyframes lds-ring {
-  0% {
-    transform: rotate(0deg);
   }
-  100% {
-    transform: rotate(360deg);
+
+  .div-notificaciones {
+    z-index: 11;
   }
-}
 
-/* LOADER TIPO PUNTOS*/
-
-.lds-ellipsis {
-  display: inline-block;
-  position: relative;
-  width: 80px;
-  height: 80px;
-}
-.lds-ellipsis div {
-  position: absolute;
-  top: 33px;
-  width: 13px;
-  height: 13px;
-  border-radius: 50%;
-  background: var(--color-azul-claro);
-  animation-timing-function: cubic-bezier(0, 1, 1, 0);
-}
-.lds-ellipsis div:nth-child(1) {
-  left: 8px;
-  animation: lds-ellipsis1 0.6s infinite;
-}
-.lds-ellipsis div:nth-child(2) {
-  left: 8px;
-  animation: lds-ellipsis2 0.6s infinite;
-}
-.lds-ellipsis div:nth-child(3) {
-  left: 32px;
-  animation: lds-ellipsis2 0.6s infinite;
-}
-.lds-ellipsis div:nth-child(4) {
-  left: 56px;
-  animation: lds-ellipsis3 0.6s infinite;
-}
-@keyframes lds-ellipsis1 {
-  0% {
+  .subir-arriba {
+    background-color: var(--color-gris-claro);
+    position: fixed;
+    /* fijo */
+    transition: all .4s ease-in-out;
+    /* cuando aparezca el boton y desaparezca*/
     transform: scale(0);
+    /* */
+    bottom: 1%;
+    /*abajo a la derecha */
+    right: 1%;
+    /*abajo a la derecha */
+    z-index: 10;
+    /*que se muestre por encima de la notificacion */
   }
-  100% {
-    transform: scale(1);
+
+  .img-contacto {
+    object-fit: cover;
+    height: 12rem;
+    min-width: 12rem;
   }
-}
-@keyframes lds-ellipsis3 {
-  0% {
-    transform: scale(1);
+
+  .img-tabla {
+    height: 4rem;
+    object-fit: cover;
   }
-  100% {
-    transform: scale(0);
+
+  /* CLASES FORMULARIO */
+
+  .img-form {
+    position: absolute;
+    height: 18rem;
+    border: 1px solid black;
+    border-radius: .5rem;
+    object-fit: cover;   /* contain ajusta el tamaño de la imagen en el recuadro de contacto */
+    z-index: 2;
   }
-}
-@keyframes lds-ellipsis2 {
-  0% {
-    transform: translate(0, 0);
+
+  .caja-icono-form {
+    position: absolute;
+    height: 18rem;
+    border: .4rem dashed green;
+    display: none;
+    justify-content: center;
+    align-items: center;
+    z-index: 1;
   }
-  100% {
-    transform: translate(24px, 0);
+
+  .icono-img-form {
+    font-size: 10rem;
+    color: green;
+    animation: animacion-drag-drop 3s infinite;
   }
-}
+
+  @keyframes animacion-drag-drop {
+    0% {
+      font-size: 10rem;
+    }
+
+    50% {
+      font-size: 9rem;
+    }
+
+    100% {
+      font-size: 10rem;
+    }
+  }
 
 
+
+  /* LOADER ANILLO*/
+  .lds-ring {
+    display: inline-block;
+    position: relative;
+    width: 80px;
+    height: 80px;
+  }
+
+  .lds-ring div {
+    box-sizing: border-box;
+    display: block;
+    position: absolute;
+    width: 64px;
+    height: 64px;
+    margin: 8px;
+    border: 8px solid var(--color-azul-oscuro);
+    border-radius: 50%;
+    animation: lds-ring 1.2s cubic-bezier(0.5, 0, 0.5, 1) infinite;
+    border-color: var(--color-azul-oscuro) transparent transparent transparent;
+  }
+
+  .lds-ring div:nth-child(1) {
+    animation-delay: -0.45s;
+  }
+
+  .lds-ring div:nth-child(2) {
+    animation-delay: -0.3s;
+  }
+
+  .lds-ring div:nth-child(3) {
+    animation-delay: -0.15s;
+  }
+
+  @keyframes lds-ring {
+    0% {
+      transform: rotate(0deg);
+    }
+
+    100% {
+      transform: rotate(360deg);
+    }
+  }
+
+  /* LOADER TIPO PUNTOS*/
+
+  .lds-ellipsis {
+    display: inline-block;
+    position: relative;
+    width: 80px;
+    height: 80px;
+  }
+
+  .lds-ellipsis div {
+    position: absolute;
+    top: 33px;
+    width: 13px;
+    height: 13px;
+    border-radius: 50%;
+    background: var(--color-azul-claro);
+    animation-timing-function: cubic-bezier(0, 1, 1, 0);
+  }
+
+  .lds-ellipsis div:nth-child(1) {
+    left: 8px;
+    animation: lds-ellipsis1 0.6s infinite;
+  }
+
+  .lds-ellipsis div:nth-child(2) {
+    left: 8px;
+    animation: lds-ellipsis2 0.6s infinite;
+  }
+
+  .lds-ellipsis div:nth-child(3) {
+    left: 32px;
+    animation: lds-ellipsis2 0.6s infinite;
+  }
+
+  .lds-ellipsis div:nth-child(4) {
+    left: 56px;
+    animation: lds-ellipsis3 0.6s infinite;
+  }
+
+  @keyframes lds-ellipsis1 {
+    0% {
+      transform: scale(0);
+    }
+
+    100% {
+      transform: scale(1);
+    }
+  }
+
+  @keyframes lds-ellipsis3 {
+    0% {
+      transform: scale(1);
+    }
+
+    100% {
+      transform: scale(0);
+    }
+  }
+
+  @keyframes lds-ellipsis2 {
+    0% {
+      transform: translate(0, 0);
+    }
+
+    100% {
+      transform: translate(24px, 0);
+    }
+  }
 </style>

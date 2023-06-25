@@ -24,6 +24,39 @@
         document.documentElement.scrollTop = 0;
     }
 
+    //DRAGOVER  >> se dispara cuando arratremos un archivos en la zona de carga
+   document.getElementById('imgForm').addEventListener('dragover', function(event)
+   {
+    event.preventDefault();
+    this.style.filter = 'opacity(0%)'; // la imagen esta arriba pero no vemos nada,VEMOS lo qye hay abajo
+    document.getElementById("cajaIconoForm").style.display = 'flex';
+   });
+
+
+    //DRAGLEAVE >> se ejecuta cuando salimos de esa zona carga
+
+    document.getElementById('imgForm').addEventListener('dragleave', function(event)
+   {
+    this.style.filter = 'opacity(100%)'; // la imagen esta arriba pero no vemos nada
+    document.getElementById("cajaIconoForm").style.display = 'none';
+   });
+
+
+    //DROP >>> cuando soltamos el archivos en la zana de carga
+
+    document.getElementById('imgForm').addEventListener('drop', function(event)
+   {
+    event.preventDefault();
+    // aqui estaran guardados todos los archivos que  hallamos arrastrado a la zona de carga
+    let ficheros = event.dataTransfer.files;
+    //pasamos los arhivos al INPUT
+    document.getElementById('imagen').files = ficheros;
+    // crarmos url para mostrar imagen
+    document.getElementById('imgForm').src = URL.createObjectURL(ficheros[0]);
+    //mostramos la imagen y quitamos zona de carga
+    this.style.filter = 'opacity(100%)';
+    document.getElementById("cajaIconoForm").style.display = 'none';
+   });
     
 
 </script>

@@ -31,11 +31,11 @@
         <div class="modal-header">
           <h5 class="modal-title" id="tituloModal">Nuevo Contacto</h5>
         </div>
+        <!-- Formulario de crear contacto-->
         <form onsubmit="insertarContacto()" method="dialog" id="formulario">
-          <!-- Formulario de crear contacto-->
           <div class="modal-body">
-
             <div class="row mb-3">
+           
               <!-- Parte izquierda DEL MODAL TARJETA-->
               <div class="col-6 d-flex flex-column">
                 <!-- Nombre -->
@@ -74,8 +74,11 @@
               </div>
 
               <!-- Parte Derecha DEL MODAL TARJETA-->
-              <div class="col-6 d-flex justify-content-center align-items-center p-0">
+              <div class="col-6 d-flex justify-content-center align-items-center p-0 position-relative">
                 <img class="img-fluid img-form" id="imgForm" alt="Imagen de Contacto">
+                <div class="caja-icono-form container-fluid" id="cajaIconoForm">
+                  <i class="icono-img-form bi bi-cloud-plus"></i>
+                </div>
               </div>
             </div>
           </div>
