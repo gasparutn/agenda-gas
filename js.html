@@ -87,10 +87,7 @@
                 .withFailureHandler(contactoInsertadoError)
                 .insertarContacto(contacto, imagen);
         }
-
     }
-
-
 
     function contactoInsertadoCorrectamente() {
         //eliminamos los datos de los Inputs
@@ -132,7 +129,7 @@
                 .withFailureHandler(contactoModificadoError)
                 .modificarContacto(contacto);
         }
-
+    }
         function subirImagenModificar(contacto, archivo) {
             //fileReader se utiliza para almacenar distintos tipos de archivos.
             let fr = new FileReader();
@@ -156,11 +153,8 @@
                     .withFailureHandler(contactoModificadoError)
                     .modificarContacto(contacto, imagen);
             }
-
         }
-
-
-    }
+    
 
     function contactoModificadoCorrectamente() {
 
@@ -195,6 +189,7 @@
         //eliminamos loader
         mostrar();
     }
+
     function crearNotificacion(mensaje, titulo) {
         document.getElementById('mensajeNotificacion').textContent = mensaje;
         document.getElementById('tituloNotificacion').textContent = titulo;
@@ -224,6 +219,9 @@
         mostrar();
     }
 
+// habilitacion de popovers 
 
+const popoverTriggerList = document.querySelectorAll('[data-bs-toggle="popover"]')
+const popoverList = [...popoverTriggerList].map(popoverTriggerEl => new bootstrap.Popover(popoverTriggerEl))
 
 </script>
