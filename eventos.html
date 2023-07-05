@@ -90,6 +90,47 @@
     }
 
 
+      //inicio
+
+      window.addEventListener('load', function(){
+
+        mostrar();
+
+      });
+
+   //eventos botones mostrar contactos
+   document.getElementById('tarjetasEstiloTabla').addEventListener('click', function(event)
+   {
+    aplicarEstilo(ESTILO_TABLA);
+    crearTablaContactos();
+   });
+   document.getElementById('tarjetasEstiloFila').addEventListener('click', function(event)
+   {
+    aplicarEstilo(ESTILO_FILA);
+    crearTarjetasContactos();
+   });
+   document.getElementById('tarjetasEstilo1').addEventListener('click', function(event)
+   {
+    aplicarEstilo(ESTILO_TARJETA_1);
+   });
+   document.getElementById('tarjetasEstilo2').addEventListener('click', function(event)
+   {
+    aplicarEstilo(ESTILO_TARJETA_2);
+   });
+   document.getElementById('tarjetasEstilo3').addEventListener('click', function(event)
+   {
+    aplicarEstilo(ESTILO_TARJETA_3);
+   });
+   document.getElementById('tarjetasEstilo4').addEventListener('click', function(event)
+   {
+    aplicarEstilo(ESTILO_TARJETA_4);
+   });
+   document.getElementById('tarjetasEstilo5').addEventListener('click', function(event)
+   {
+    aplicarEstilo(ESTILO_TARJETA_5);
+   });
+
+
     // habilitacion de popovers 
     const popoverTriggerList = document.querySelectorAll('[data-bs-toggle="popover"]')
     const popoverList = [...popoverTriggerList].map(popoverTriggerEl => new bootstrap.Popover(popoverTriggerEl))
