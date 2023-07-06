@@ -1,5 +1,17 @@
 <script>
-    //boton subir
+   //inicio
+   window.addEventListener('load', function(){
+      mostrar();
+      });
+   
+   //insertar contacto
+   document.getElementById('insertarContacto').addEventListener('click', function()
+   {
+    Contacto.nuevo();
+   });
+   
+   
+   //boton subir
     window.addEventListener('scroll', function () {
         if (this.window.scrollY > 500) {
             document.getElementById('botonSubir').style.transform = 'scale(1)';
@@ -64,70 +76,29 @@
         copiarContenido(this, 'telfInfoContacto');
     });
 
-    function copiarContenido(icono, id) 
-    {
-        let texto = document.getElementById(id).textContent;
-        
-        navigator.clipboard.writeText(texto)
-            .then(() => 
-            {
-                icono.classList.remove('bi-clipboard');
-                icono.classList.add('bi-check-lg');
-                icono.title = 'Copiado';
-                bootstrap.Tooltip.getOrCreateInstance(icono).show();
-                restaurarIcono(icono);
-            })
-    }
-
-    function restaurarIcono(icono) {
-        setTimeout(function () 
-        {
-            icono.classList.remove('bi-check-lg');
-            icono.classList.add('bi-clipboard');
-            icono.title = '';
-            bootstrap.Tooltip.getInstance(icono).dispose();
-        }, 2000);
-    }
-
-
-      //inicio
-
-      window.addEventListener('load', function(){
-
-        mostrar();
-
-      });
+         
 
    //eventos botones mostrar contactos
-   document.getElementById('tarjetasEstiloTabla').addEventListener('click', function(event)
-   {
-    aplicarEstilo(ESTILO_TABLA);
-    crearTablaContactos();
-   });
-   document.getElementById('tarjetasEstiloFila').addEventListener('click', function(event)
-   {
-    aplicarEstilo(ESTILO_FILA);
-    crearTarjetasContactos();
-   });
+  
    document.getElementById('tarjetasEstilo1').addEventListener('click', function(event)
    {
-    aplicarEstilo(ESTILO_TARJETA_1);
+    Contacto.aplicarEstilo(Contacto.ESTILO_1);
    });
    document.getElementById('tarjetasEstilo2').addEventListener('click', function(event)
    {
-    aplicarEstilo(ESTILO_TARJETA_2);
+    Contacto.aplicarEstilo(Contacto.ESTILO_2);
    });
    document.getElementById('tarjetasEstilo3').addEventListener('click', function(event)
    {
-    aplicarEstilo(ESTILO_TARJETA_3);
+    Contacto.aplicarEstilo(Contacto.ESTILO_3);
    });
    document.getElementById('tarjetasEstilo4').addEventListener('click', function(event)
    {
-    aplicarEstilo(ESTILO_TARJETA_4);
+    Contacto.aplicarEstilo(Contacto.ESTILO_4);
    });
    document.getElementById('tarjetasEstilo5').addEventListener('click', function(event)
    {
-    aplicarEstilo(ESTILO_TARJETA_5);
+    Contacto.aplicarEstilo(Contacto.ESTILO_5);
    });
 
 

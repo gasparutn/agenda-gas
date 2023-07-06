@@ -1,7 +1,7 @@
 <script>
-   //////////////////
-   // CONSTANTES 
-   /////////////////
+    //////////////////
+    // CONSTANTES 
+    /////////////////
     const ICONO_CHECK = 'bi-check2-square';
     const ICONO_PAPELERA = 'bi-trash';
     const ICONO_CONTACTO = 'bi-person-plus-fill';
@@ -15,235 +15,49 @@
     const LOTTIE_ADVERTENCIA = 'https://assets3.lottiefiles.com/packages/lf20_Tkwjw8.json';
     const LOTTIE_LOADER_NUBE = 'https://assets8.lottiefiles.com/private_files/lf30_m5jf97io.json';
     const LOTTIE_LOADER_FRASE = 'https://assets1.lottiefiles.com/packages/lf20_yTjvtJ.json';
-    // id de las PLANITLLAS
-    const ESTILO_TARJETA_1 = 'plantillaContacto1';
-    const ESTILO_TARJETA_2 = 'plantillaContacto2';
-    const ESTILO_TARJETA_3 = 'plantillaContacto3';
-    const ESTILO_TARJETA_4 = 'plantillaContacto4';
-    const ESTILO_TARJETA_5 = 'plantillaContacto5';
-    const ESTILO_FILA = 'fila';
-    const ESTILO_TABLA = 'tabla';
-
-    let estiloActual = ESTILO_TARJETA_1;
 
 
-    
+    function copiarContenido(icono, id) 
+    {
+        let texto = document.getElementById(id).textContent;
+        
+        navigator.clipboard.writeText(texto)
+            .then(() => 
+            {
+                icono.classList.remove('bi-clipboard');
+                icono.classList.add('bi-check-lg');
+                icono.title = 'Copiado';
+                bootstrap.Tooltip.getOrCreateInstance(icono).show();
+                restaurarIcono(icono);
+            })
+    }
+
+    function restaurarIcono(icono) {
+        setTimeout(function () 
+        {
+            icono.classList.remove('bi-check-lg');
+            icono.classList.add('bi-clipboard');
+            icono.title = '';
+            bootstrap.Tooltip.getInstance(icono).dispose();
+        }, 2000);
+    }
+
     function limpiar() {
-        eliminarTabla();
         eliminarTarjetas();
         crearLoaderLottie('divContactos', LOTTIE_LOADER_NUBE);
     }
 
-    function mostrar() 
-    {
-        switch(estiloActual)
-        {
-            case ESTILO_TABLA: crearTablaContactos; break;
-            case ESTILO_FILA: crearTarjetasContactos; break;
-            default: crearTarjetasCuadradas(); break;
+    function mostrar() {
+        crearTarjetas();
+    }
+
+    function extraerContactos(datos) {
+        let contactos = [];
+        for (let i = 1; i < datos.length; i++) {
+            contactos.push(new Contacto(datos[i][0], datos[i][1], datos[i][2], datos[i][3], datos[i][4], i + 1));
         }
-        
-        eliminarLoader();
+        return contactos;
     }
-
-    function aplicarEstilo(estilo)
-    {
-   estiloActual = estilo;
-   mostrar();
-    }
-
-    //INSERTAR CONTACTOS
-    function insertarContacto() {
-
-        limpiar();
-        //cerrar modal
-        bootstrap.Modal.getInstance(document.getElementById('crearContactoModal')).hide(); //HIDE ->PARA QUE DESAPAREZCA EL MODAL
-        //guardamos el contacto
-
-        let contacto = guardarDatosContacto();
-        //guardamos el archivo>> que lo tenemos en el input y elijimos el primer archivo[0]
-        //si no introduzco imagen se guarda la imagen de la constante
-        let archivo = document.getElementById('imagen').files[0];
-
-        //validamos que sea cargue un archivo o no 
-        if (archivo) subirImagenInsertar(contacto, archivo);
-        else {
-            google.script.run
-                .withSuccessHandler(contactoInsertadoCorrectamente)
-                .withFailureHandler(contactoInsertadoError)
-                .insertarContacto(contacto);
-        }
-    }
-
-    function guardarDatosContacto() {
-        let contacto =
-        {
-            //obtenemos datos a traves de los ID
-            nombre: document.getElementById('nombre').value,
-            apellidos: document.getElementById('apellidos').value,
-            correo: document.getElementById('correo').value,
-            telf: document.getElementById('telf').value,
-            imagen: document.getElementById('imgForm').src
-        };
-        return contacto;
-    }
-
-    function subirImagenInsertar(contacto, archivo) {
-        //fileReader se utiliza para almacenar distintos tipos de archivos.
-        let fr = new FileReader();
-        //cuando se haya cargado ese archivo guardarlo como un ArrayBuffer
-        fr.readAsArrayBuffer(archivo);
-        //cuando se complete la carga y se ejecute el ONLOAD, vamos a ejecutar una funcion que me pase ese ArrayBuffer ala funcion de Script
-        //de goole y se guarde
-        fr.onload = function () {
-
-            let imagen =
-            {  //accedemos al archivo
-                nombre: archivo.name,
-                tipo: archivo.type,
-                //guardamos esos datos en binario con la funcion Int8Array y por this hacemos referencia al objeto
-                // para que no sea solo una vista, hacemo una INSTANCIA - Array.from
-                datos: Array.from(new Int8Array(this.result))
-            };
-            // y se llama la funcion
-            google.script.run
-                .withSuccessHandler(contactoInsertadoCorrectamente)
-                .withFailureHandler(contactoInsertadoError)
-                .insertarContacto(contacto, imagen);
-        }
-    }
-
-    function contactoInsertadoCorrectamente() {
-        //eliminamos los datos de los Inputs
-        document.getElementById('nombre').value = '';
-        document.getElementById('correo').value = '';
-
-        //mostramos notificacion
-        crearNotificacionContacto('Contacto insertado correctamente', 'CONTACTO OK');
-        //eliminamos loader
-        eliminarLoader();
-
-        //mostramos tabla contacto
-        crearTablaContactos();
-    }
-
-    function contactoInsertadoError() {
-        crearNotificacionError('No se ha podido insertar el contacto', 'ERROR');
-        //eliminamos loader
-        eliminarLoader();
-        //mostramos tabla contacto
-        crearTablaContactos();
-    }
-    //MODIFICAR CONTACTOS
-    function modificarContacto(numFila) {
-
-        limpiar();
-        bootstrap.Modal.getOrCreateInstance(document.getElementById('crearContactoModal')).hide(); //<<< hide para cerrar el modal
-
-        //obtener nuevos datos a partir del formulario
-        let contacto = guardarDatosContacto();
-        contacto.fila = numFila; // <<<< obtenemos la fila de este modo
-
-        let archivo = document.getElementById('imagen').files[0];
-
-        if (archivo) subirImagenModificar(contacto, archivo);
-        else {
-            google.script.run
-                .withSuccessHandler(contactoModificadoCorrectamente)
-                .withFailureHandler(contactoModificadoError)
-                .modificarContacto(contacto);
-        }
-    }
-        function subirImagenModificar(contacto, archivo) {
-            //fileReader se utiliza para almacenar distintos tipos de archivos.
-            let fr = new FileReader();
-            //cuando se haya cargado ese archivo guardarlo como un ArrayBuffer
-            fr.readAsArrayBuffer(archivo);
-            //cuando se complete la carga y se ejecute el ONLOAD, vamos a ejecutar una funcion que me pase ese ArrayBuffer ala funcion de Script
-            //de goole y se guarde
-            fr.onload = function () {
-
-                let imagen =
-                {  //accedemos al archivo
-                    nombre: archivo.name,
-                    tipo: archivo.type,
-                    //guardamos esos datos en binario con la funcion Int8Array y por this hacemos referencia al objeto
-                    // para que no sea solo una vista, hacemo una INSTANCIA - Array.from
-                    datos: Array.from(new Int8Array(this.result))
-                };
-                // y se llama la funcion
-                google.script.run
-                    .withSuccessHandler(contactoModificadoCorrectamente)
-                    .withFailureHandler(contactoModificadoError)
-                    .modificarContacto(contacto, imagen);
-            }
-        }
-    
-
-    function contactoModificadoCorrectamente() {
-
-        crearNotificacionContacto('Contacto Modificado correctamente', 'MODIFICADO OK');
-
-        mostrar();
-    }
-
-    function contactoModificadoError() {
-        crearNotificacionError('No se ha modificado el contacto', 'ERROR');
-        mostrar();
-    }
-    //BORRAR CONTACTOS
-    function borrarContacto(numFila) {
-        limpiar();
-
-        google.script.run
-            .withSuccessHandler(contactoBorradoCorrectamente)
-            .withFailureHandler(contactoBorradoError)
-            .borrarContacto(numFila);
-    }
-
-    function contactoBorradoCorrectamente() {
-        //mostramos notificacion
-        crearNotificacionBorrar('Contacto borrado correctamente', 'BORRADO OK');
-        //eliminamos loader
-        mostrar();
-    }
-
-    function contactoBorradoError() {
-        crearNotificacionError('No se ha podido BORRAR el contacto', 'ERROR');
-        //eliminamos loader
-        mostrar();
-    }
-
-    function crearNotificacion(mensaje, titulo) {
-        document.getElementById('mensajeNotificacion').textContent = mensaje;
-        document.getElementById('tituloNotificacion').textContent = titulo;
-        let elementoNotificacion = document.getElementById('notificacion');
-        bootstrap.Toast.getOrCreateInstance(elementoNotificacion).show();
-    }
-    //IMPORTAR CONTACTOS
-    function importarContactos() {
-        limpiar();
-
-        google.script.run
-            .withSuccessHandler(contactosImportadosCorrectamente)
-            .withFailureHandler(contactosImportadosError)
-            .importarContactos();
-    }
-
-    function contactosImportadosCorrectamente() {
-        //mostramos notificacion
-        crearNotificacionBorrar('Se han agregado los contactos correctamente', 'CONTACTO OK');
-        //eliminamos loader
-        mostrar();
-    }
-
-    function contactosImportadosError() {
-        crearNotificacionError('No se ha podido importar los contactos', 'ERROR');
-        //eliminamos loader
-        mostrar();
-    }
-
 
     
-
 </script>
